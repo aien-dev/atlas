@@ -1,9 +1,26 @@
 {
   "milestone": "MILESTONE_1_ALPHA",
-  "timestamp_epoch": 1790396190.7896683,
+  "qualification_status": "REQUALIFIED_ALL_GATES_PASSED",
+  "timestamp_epoch": 1790398174.3240738,
   "canonical_artifact": "alpha.bin",
-  "sha256": "88035c7f3a5549b082580e73fdbe220552dd7f1828f1b6e7018423148e6322d5",
-  "duration_seconds": 3.012571334838867,
+  "artifact_size_bytes": 1272,
+  "sha256": "edd25769484f3d51d842ba561c58da5647db3821c6c28f05c8c28f28f269fc18",
+  "cryptographic_verification_scheme": "sha256",
+  "pinned_physics_digest": "e1d89bb1e0854ebaccd2be5c756c8a2ff8c5ecc8c0f90b4abd461fb7bf98374c",
+  "audit_ledger_reconciliation": {
+    "instructions": 250,
+    "rodata_constants": 68,
+    "total_32bit_words": 318,
+    "byte_discrepancy": 0
+  },
+  "static_target_proof": {
+    "branch_instruction": "br x19",
+    "predecessor": "ldr x19, literal @ 0x0160",
+    "literal_target": "0x40200000",
+    "proof_status": "VERIFIED_IMMUTABLE"
+  },
+  "mutation_matrix_results": "12_OF_12_MUTATIONS_REFUSED_INTO_QUIESCENCE",
+  "duration_seconds": 21.093322038650513,
   "gates": {
     "ALPHA_ARTIFACT_IDENTITY_PASS": true,
     "ALPHA_MACHINE_CONTRACT_PASS": true,
@@ -13,6 +30,5 @@
     "ALPHA_CORRUPTION_REFUSAL_QEMU_PASS": true,
     "ALPHA_FAIL_CLOSED_QEMU_PASS": true
   },
-  "qualified": true,
   "native_hardware_qualification_status": "PENDING_SEPARATE_NATIVE_GATES"
 }

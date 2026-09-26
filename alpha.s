@@ -2,6 +2,8 @@
  * ALPHA: Irreducible Bootstrap Seed
  * Canonical Root Artifact: alpha.bin
  * Machine Contract: CONTRACT-QEMU-VIRT-AARCH64-M1
+ * Cryptographic Integrity Scheme: Standard SHA-256
+ * Pinned Digest: e1d89bb1e0854ebaccd2be5c756c8a2ff8c5ecc8c0f90b4abd461fb7bf98374c
  * Entry Point: 0x00000000 (Flash Base)
  */
 
@@ -41,22 +43,30 @@ _start:
     adr x21, msg_verify
     bl print_string
 
-    /* 7. Verify PHYSICS-0 Integrity (64-bit FNV-1a Hash) */
-    ldr x23, =0x40200000        /* Payload Base */
-    mov x24, #256               /* Byte count */
-    ldr x25, =0xcbf29ce484222325 /* FNV Offset Basis */
-    ldr x26, =0x00000100000001b3 /* FNV Prime */
+    /* 7. Verify PHYSICS-0 Integrity using Cryptographic SHA-256 */
+    /* sha256_256bytes(payload, scratch_buf, out_digest) */
+    ldr x0, =0x40200000         /* Arg 0: Payload base */
+    ldr x1, =0x401FE100         /* Arg 1: 64-byte scratchpad for padding block */
+    ldr x2, =0x401FE080         /* Arg 2: 32-byte digest output buffer */
+    bl sha256_256bytes
 
-.Lverify_loop:
-    ldrb w27, [x23], #1
-    eor x25, x25, x27
-    mul x25, x25, x26
-    subs x24, x24, #1
-    b.ne .Lverify_loop
+    /* Compare computed 32-byte SHA-256 against pinned expected digest */
+    ldr x2, =0x401FE080
+    adr x3, pinned_sha256_digest
 
-    /* Compare computed digest against pinned expected digest */
-    ldr x28, =0x106e6d37dd96e28b
-    cmp x25, x28
+    /* Compare 8 x 32-bit words (2 x 64-bit pair loads) */
+    ldp x4, x5, [x2, #0]
+    ldp x6, x7, [x3, #0]
+    cmp x4, x6
+    b.ne .Lrefuse_handoff
+    cmp x5, x7
+    b.ne .Lrefuse_handoff
+
+    ldp x4, x5, [x2, #16]
+    ldp x6, x7, [x3, #16]
+    cmp x4, x6
+    b.ne .Lrefuse_handoff
+    cmp x5, x7
     b.ne .Lrefuse_handoff
 
     /* 8. Emit Diagnostic Checkpoint 3: HANDOFF */
@@ -67,7 +77,9 @@ _start:
     mov x0, x22                 /* x0 = pointer to Boot Descriptor (0x401FE000) */
     mov x1, #256                /* x1 = payload size (256 bytes) */
     ldr x2, =0x5048595349435330 /* x2 = verification cookie ('PHYSICS0') */
-    ldr x19, =0x40200000        /* Physics entry address */
+
+    /* Static Target Proof: x19 is explicitly loaded from literal 0x40200000 immediately before branch */
+    ldr x19, =0x40200000        /* Target: Contract-defined Physics Entry */
 
     /* 10. Transfer Control to Physics */
     br x19
@@ -95,7 +107,7 @@ print_string:
 .Lprint_ret:
     ret
 
-.balign 4
+.balign 8
 msg_awaken:
     .asciz "ALPHA: AWAKEN\n"
 msg_verify:
@@ -105,6 +117,12 @@ msg_handoff:
 msg_refuse:
     .asciz "ALPHA: REFUSE\n"
 
+.balign 8
+pinned_sha256_digest:
+    /* e1d89bb1 e0854eba ccd2be5c 756c8a2f f8c5ecc8 c0f90b4a bd461fb7 bf98374c */
+    .word 0xe1d89bb1, 0xe0854eba, 0xccd2be5c, 0x756c8a2f
+    .word 0xf8c5ecc8, 0xc0f90b4a, 0xbd461fb7, 0xbf98374c
+
 .ltorg
 .balign 64
-_end:
+code_end:

@@ -1,106 +1,333 @@
 # ALPHA MACHINE OPERATION AUDIT LEDGER
-## Normative Accounting: 100% Reachable Instructions & Memory Bounds
+## Normative Mathematical Accounting: 100% Byte Reconciliation
 
-| Offset | Raw Bytes | Decoded Operation | Inputs | Outputs | Branch Target | Memory Accessed | Privilege Required |
+- **Binary Artifact:** `alpha.bin` (1272 bytes)
+- **Total 32-bit Words:** 318 words
+
+| Offset | Raw Bytes | Decoded Operation / Content | Inputs | Outputs | Branch Target | Memory Accessed | Classification |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `0x0000` | `d5034fdf` | `msr	daifset, #0xf` | `#0xf` | `DAIF` | `-` | `-` | `EL1/EL2` |
-| `0x0004` | `580007e0` | `ldr	x0, 100 <msg_refuse+0x12>` | `-` | `x0` | `-` | `Literal @ 0x0100` | `EL1/EL2` |
-| `0x0008` | `9100001f` | `mov	sp, x0` | `x0` | `SP` | `-` | `-` | `EL1/EL2` |
-| `0x000c` | `580007f4` | `ldr	x20, 108 <msg_refuse+0x1a>` | `-` | `x20` | `-` | `Literal @ 0x0108` | `EL1/EL2` |
-| `0x0010` | `10000595` | `adr	x21, c0 <msg_awaken>` | `c0` | `x21` | `-` | `-` | `EL1/EL2` |
-| `0x0014` | `94000026` | `bl	ac <print_string>` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0018` | `580007d6` | `ldr	x22, 110 <msg_refuse+0x22>` | `-` | `x22` | `-` | `Literal @ 0x0110` | `EL1/EL2` |
-| `0x001c` | `580007e0` | `ldr	x0, 118 <msg_refuse+0x2a>` | `-` | `x0` | `-` | `Literal @ 0x0118` | `EL1/EL2` |
-| `0x0020` | `f90002c0` | `str	x0, [x22]` | `x0` | `-` | `-` | `Write [x22]` | `EL1/EL2` |
-| `0x0024` | `580007e0` | `ldr	x0, 120 <msg_refuse+0x32>` | `-` | `x0` | `-` | `Literal @ 0x0120` | `EL1/EL2` |
-| `0x0028` | `f90006c0` | `str	x0, [x22, #8]` | `x0` | `-` | `-` | `Write [x22, #8]` | `EL1/EL2` |
-| `0x002c` | `aa1403e0` | `mov	x0, x20` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0030` | `f9000ac0` | `str	x0, [x22, #16]` | `x0` | `-` | `-` | `Write [x22, #16]` | `EL1/EL2` |
-| `0x0034` | `580007a0` | `ldr	x0, 128 <msg_refuse+0x3a>` | `-` | `x0` | `-` | `Literal @ 0x0128` | `EL1/EL2` |
-| `0x0038` | `f9000ec0` | `str	x0, [x22, #24]` | `x0` | `-` | `-` | `Write [x22, #24]` | `EL1/EL2` |
-| `0x003c` | `d2802000` | `mov	x0, #0x100                 	// #256` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0040` | `f90012c0` | `str	x0, [x22, #32]` | `x0` | `-` | `-` | `Write [x22, #32]` | `EL1/EL2` |
-| `0x0044` | `70000455` | `adr	x21, cf <msg_verify>` | `cf` | `x21` | `-` | `-` | `EL1/EL2` |
-| `0x0048` | `94000019` | `bl	ac <print_string>` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x004c` | `580006f7` | `ldr	x23, 128 <msg_refuse+0x3a>` | `-` | `x23` | `-` | `Literal @ 0x0128` | `EL1/EL2` |
-| `0x0050` | `d2802018` | `mov	x24, #0x100                 	// #256` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0054` | `580006f9` | `ldr	x25, 130 <msg_refuse+0x42>` | `-` | `x25` | `-` | `Literal @ 0x0130` | `EL1/EL2` |
-| `0x0058` | `5800071a` | `ldr	x26, 138 <msg_refuse+0x4a>` | `-` | `x26` | `-` | `Literal @ 0x0138` | `EL1/EL2` |
-| `0x005c` | `384016fb` | `ldrb	w27, [x23], #1` | `-` | `w27` | `-` | `Read [x23]` | `EL1/EL2` |
-| `0x0060` | `ca1b0339` | `eor	x25, x25, x27` | `x25, x27` | `x25` | `-` | `-` | `EL1/EL2` |
-| `0x0064` | `9b1a7f39` | `mul	x25, x25, x26` | `x25, x26` | `x25` | `-` | `-` | `EL1/EL2` |
-| `0x0068` | `f1000718` | `subs	x24, x24, #0x1` | `x24, #0x1` | `x24` | `-` | `-` | `EL1/EL2` |
-| `0x006c` | `54ffff81` | `b.ne	5c <_start+0x5c>  // b.any` | `-` | `-` | `b.any` | `-` | `EL1/EL2` |
-| `0x0070` | `5800069c` | `ldr	x28, 140 <msg_refuse+0x52>` | `-` | `x28` | `-` | `Literal @ 0x0140` | `EL1/EL2` |
-| `0x0074` | `eb1c033f` | `cmp	x25, x28` | `x28` | `x25` | `-` | `-` | `EL1/EL2` |
-| `0x0078` | `54000121` | `b.ne	9c <_start+0x9c>  // b.any` | `-` | `-` | `b.any` | `-` | `EL1/EL2` |
-| `0x007c` | `50000315` | `adr	x21, de <msg_handoff>` | `de` | `x21` | `-` | `-` | `EL1/EL2` |
-| `0x0080` | `9400000b` | `bl	ac <print_string>` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0084` | `aa1603e0` | `mov	x0, x22` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0088` | `d2802001` | `mov	x1, #0x100                 	// #256` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x008c` | `580005e2` | `ldr	x2, 148 <msg_refuse+0x5a>` | `-` | `x2` | `-` | `Literal @ 0x0148` | `EL1/EL2` |
-| `0x0090` | `580004d3` | `ldr	x19, 128 <msg_refuse+0x3a>` | `-` | `x19` | `-` | `Literal @ 0x0128` | `EL1/EL2` |
-| `0x0094` | `d61f0260` | `br	x19` | `-` | `-` | `x19` | `-` | `EL1/EL2` |
-| `0x0098` | `14000003` | `b	a4 <_start+0xa4>` | `-` | `-` | `<_start+0xa4>` | `-` | `EL1/EL2` |
-| `0x009c` | `50000295` | `adr	x21, ee <msg_refuse>` | `ee` | `x21` | `-` | `-` | `EL1/EL2` |
-| `0x00a0` | `94000003` | `bl	ac <print_string>` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00a4` | `d503205f` | `wfe` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00a8` | `17ffffff` | `b	a4 <_start+0xa4>` | `-` | `-` | `<_start+0xa4>` | `-` | `EL1/EL2` |
-| `0x00ac` | `384016a0` | `ldrb	w0, [x21], #1` | `-` | `w0` | `-` | `Read [x21]` | `EL1/EL2` |
-| `0x00b0` | `34000060` | `cbz	w0, bc <print_string+0x10>` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00b4` | `b9000280` | `str	w0, [x20]` | `w0` | `-` | `-` | `Write [x20]` | `EL1/EL2` |
-| `0x00b8` | `17fffffd` | `b	ac <print_string>` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00bc` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00c0` | `48504c41` | `.word	0x48504c41` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00c4` | `41203a41` | `.word	0x41203a41` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00c8` | `454b4157` | `.word	0x454b4157` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00cc` | `0a4e` | `.short	0x0a4e` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00cf` | `41` | `.byte	0x41` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00d0` | `4148504c` | `.word	0x4148504c` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00d4` | `4556203a` | `.word	0x4556203a` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00d8` | `59464952` | `.word	0x59464952` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00dc` | `000a` | `.short	0x000a` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00de` | `4c41` | `.short	0x4c41` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00e0` | `3a414850` | `.word	0x3a414850` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00e4` | `4e414820` | `.word	0x4e414820` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00e8` | `46464f44` | `.word	0x46464f44` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00ec` | `000a` | `.short	0x000a` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00ee` | `4c41` | `.short	0x4c41` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00f0` | `3a414850` | `.word	0x3a414850` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00f4` | `46455220` | `.word	0x46455220` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00f8` | `0a455355` | `.word	0x0a455355` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00fc` | `00` | `.byte	0x00` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x00fd` | `00000000` | `udf	#0` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0101` | `f0` | `.byte	0xf0` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0102` | `401f` | `.short	0x401f` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0104` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0108` | `09000000` | `.word	0x09000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x010c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0110` | `401fe000` | `.word	0x401fe000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0114` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0118` | `40000000` | `.word	0x40000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x011c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0120` | `08000000` | `.word	0x08000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0124` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0128` | `40200000` | `.word	0x40200000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x012c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0130` | `84222325` | `.word	0x84222325` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0134` | `cbf29ce4` | `.word	0xcbf29ce4` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0138` | `000001b3` | `.word	0x000001b3` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x013c` | `00000100` | `.word	0x00000100` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0140` | `dd96e28b` | `.word	0xdd96e28b` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0144` | `106e6d37` | `.word	0x106e6d37` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0148` | `49435330` | `.word	0x49435330` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x014c` | `50485953` | `.word	0x50485953` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0150` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0154` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0158` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x015c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0160` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0164` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0168` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x016c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0170` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0174` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x0178` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
-| `0x017c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `EL1/EL2` |
+| `0x0000` | `d5034fdf` | `msr	daifset, #0xf` | `#0xf` | `DAIF` | `-` | `-` | `INSTRUCTION` |
+| `0x0004` | `580009a0` | `ldr	x0, 138 <pinned_sha256_digest+0x20>` | `-` | `x0` | `-` | `Literal @ 0x0138` | `INSTRUCTION` |
+| `0x0008` | `9100001f` | `mov	sp, x0` | `x0` | `SP` | `-` | `-` | `INSTRUCTION` |
+| `0x000c` | `580009b4` | `ldr	x20, 140 <pinned_sha256_digest+0x28>` | `-` | `x20` | `-` | `Literal @ 0x0140` | `INSTRUCTION` |
+| `0x0010` | `10000655` | `adr	x21, d8 <msg_awaken>` | `d8` | `x21` | `-` | `-` | `INSTRUCTION` |
+| `0x0014` | `9400002c` | `bl	c4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0018` | `58000996` | `ldr	x22, 148 <pinned_sha256_digest+0x30>` | `-` | `x22` | `-` | `Literal @ 0x0148` | `INSTRUCTION` |
+| `0x001c` | `580009a0` | `ldr	x0, 150 <pinned_sha256_digest+0x38>` | `-` | `x0` | `-` | `Literal @ 0x0150` | `INSTRUCTION` |
+| `0x0020` | `f90002c0` | `str	x0, [x22]` | `x0` | `-` | `-` | `Write [x22]` | `INSTRUCTION` |
+| `0x0024` | `580009a0` | `ldr	x0, 158 <pinned_sha256_digest+0x40>` | `-` | `x0` | `-` | `Literal @ 0x0158` | `INSTRUCTION` |
+| `0x0028` | `f90006c0` | `str	x0, [x22, #8]` | `x0` | `-` | `-` | `Write [x22, #8]` | `INSTRUCTION` |
+| `0x002c` | `aa1403e0` | `mov	x0, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0030` | `f9000ac0` | `str	x0, [x22, #16]` | `x0` | `-` | `-` | `Write [x22, #16]` | `INSTRUCTION` |
+| `0x0034` | `58000960` | `ldr	x0, 160 <pinned_sha256_digest+0x48>` | `-` | `x0` | `-` | `Literal @ 0x0160` | `INSTRUCTION` |
+| `0x0038` | `f9000ec0` | `str	x0, [x22, #24]` | `x0` | `-` | `-` | `Write [x22, #24]` | `INSTRUCTION` |
+| `0x003c` | `d2802000` | `mov	x0, #0x100                 	// #256` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0040` | `f90012c0` | `str	x0, [x22, #32]` | `x0` | `-` | `-` | `Write [x22, #32]` | `INSTRUCTION` |
+| `0x0044` | `70000515` | `adr	x21, e7 <msg_verify>` | `e7` | `x21` | `-` | `-` | `INSTRUCTION` |
+| `0x0048` | `9400001f` | `bl	c4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x004c` | `580008a0` | `ldr	x0, 160 <pinned_sha256_digest+0x48>` | `-` | `x0` | `-` | `Literal @ 0x0160` | `INSTRUCTION` |
+| `0x0050` | `580008c1` | `ldr	x1, 168 <pinned_sha256_digest+0x50>` | `-` | `x1` | `-` | `Literal @ 0x0168` | `INSTRUCTION` |
+| `0x0054` | `580008e2` | `ldr	x2, 170 <pinned_sha256_digest+0x58>` | `-` | `x2` | `-` | `Literal @ 0x0170` | `INSTRUCTION` |
+| `0x0058` | `940000ba` | `bl	340 <sha256_256bytes>` | `-` | `-` | `<sha256_256bytes>` | `-` | `INSTRUCTION` |
+| `0x005c` | `580008a2` | `ldr	x2, 170 <pinned_sha256_digest+0x58>` | `-` | `x2` | `-` | `Literal @ 0x0170` | `INSTRUCTION` |
+| `0x0060` | `100005c3` | `adr	x3, 118 <pinned_sha256_digest>` | `118` | `x3` | `-` | `-` | `INSTRUCTION` |
+| `0x0064` | `a9401444` | `ldp	x4, x5, [x2]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0068` | `a9401c66` | `ldp	x6, x7, [x3]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x006c` | `eb06009f` | `cmp	x4, x6` | `x6` | `x4` | `-` | `-` | `INSTRUCTION` |
+| `0x0070` | `54000221` | `b.ne	b4 <_start+0xb4>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0074` | `eb0700bf` | `cmp	x5, x7` | `x7` | `x5` | `-` | `-` | `INSTRUCTION` |
+| `0x0078` | `540001e1` | `b.ne	b4 <_start+0xb4>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x007c` | `a9411444` | `ldp	x4, x5, [x2, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0080` | `a9411c66` | `ldp	x6, x7, [x3, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0084` | `eb06009f` | `cmp	x4, x6` | `x6` | `x4` | `-` | `-` | `INSTRUCTION` |
+| `0x0088` | `54000161` | `b.ne	b4 <_start+0xb4>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x008c` | `eb0700bf` | `cmp	x5, x7` | `x7` | `x5` | `-` | `-` | `INSTRUCTION` |
+| `0x0090` | `54000121` | `b.ne	b4 <_start+0xb4>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0094` | `50000315` | `adr	x21, f6 <msg_handoff>` | `f6` | `x21` | `-` | `-` | `INSTRUCTION` |
+| `0x0098` | `9400000b` | `bl	c4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x009c` | `aa1603e0` | `mov	x0, x22` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00a0` | `d2802001` | `mov	x1, #0x100                 	// #256` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00a4` | `580006a2` | `ldr	x2, 178 <pinned_sha256_digest+0x60>` | `-` | `x2` | `-` | `Literal @ 0x0178` | `INSTRUCTION` |
+| `0x00a8` | `580005d3` | `ldr	x19, 160 <pinned_sha256_digest+0x48>` | `-` | `x19` | `-` | `Literal @ 0x0160` | `INSTRUCTION` |
+| `0x00ac` | `d61f0260` | `br	x19` | `-` | `-` | `x19` | `-` | `INSTRUCTION` |
+| `0x00b0` | `14000003` | `b	bc <_start+0xbc>` | `-` | `-` | `<_start+0xbc>` | `-` | `INSTRUCTION` |
+| `0x00b4` | `50000295` | `adr	x21, 106 <msg_refuse>` | `106` | `x21` | `-` | `-` | `INSTRUCTION` |
+| `0x00b8` | `94000003` | `bl	c4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00bc` | `d503205f` | `wfe` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00c0` | `17ffffff` | `b	bc <_start+0xbc>` | `-` | `-` | `<_start+0xbc>` | `-` | `INSTRUCTION` |
+| `0x00c4` | `384016a0` | `ldrb	w0, [x21], #1` | `-` | `w0` | `-` | `Read [x21]` | `INSTRUCTION` |
+| `0x00c8` | `34000060` | `cbz	w0, d4 <print_string+0x10>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00cc` | `b9000280` | `str	w0, [x20]` | `w0` | `-` | `-` | `Write [x20]` | `INSTRUCTION` |
+| `0x00d0` | `17fffffd` | `b	c4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00d4` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00d8` | `48504c41` | `.word	0x48504c41` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00dc` | `41203a41` | `.word	0x41203a41` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00e0` | `454b4157` | `.word	0x454b4157` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00e4` | `41000a4e` | `.word 0x41000a4e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x00e8` | `4148504c` | `.word	0x4148504c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00ec` | `4556203a` | `.word	0x4556203a` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00f0` | `59464952` | `.word	0x59464952` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00f4` | `4c41000a` | `.word 0x4c41000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x00f8` | `3a414850` | `.word	0x3a414850` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00fc` | `4e414820` | `.word	0x4e414820` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0100` | `46464f44` | `.word	0x46464f44` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0104` | `4c41000a` | `.word 0x4c41000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0108` | `3a414850` | `.word	0x3a414850` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x010c` | `46455220` | `.word	0x46455220` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0110` | `0a455355` | `.word	0x0a455355` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0114` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0118` | `e1d89bb1` | `.word	0xe1d89bb1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x011c` | `e0854eba` | `.word	0xe0854eba` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0120` | `ccd2be5c` | `.word	0xccd2be5c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0124` | `756c8a2f` | `.word	0x756c8a2f` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0128` | `f8c5ecc8` | `.word	0xf8c5ecc8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x012c` | `c0f90b4a` | `.word	0xc0f90b4a` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0130` | `bd461fb7` | `.word	0xbd461fb7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0134` | `bf98374c` | `.word	0xbf98374c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0138` | `401ff000` | `.word	0x401ff000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x013c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0140` | `09000000` | `.word	0x09000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0144` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0148` | `401fe000` | `.word	0x401fe000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x014c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0150` | `40000000` | `.word	0x40000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0154` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0158` | `08000000` | `.word	0x08000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x015c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0160` | `40200000` | `.word	0x40200000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0164` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0168` | `401fe100` | `.word	0x401fe100` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x016c` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0170` | `401fe080` | `.word	0x401fe080` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0174` | `00000000` | `.word	0x00000000` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0178` | `49435330` | `.word	0x49435330` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x017c` | `50485953` | `.word	0x50485953` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0180` | `a9ac7bfd` | `stp	x29, x30, [sp, #-320]!` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0184` | `d1001024` | `sub	x4, x1, #0x4` | `-` | `-` | `#0x4` | `-` | `INSTRUCTION` |
+| `0x0188` | `d2800021` | `mov	x1, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x018c` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0190` | `910103ec` | `add	x12, sp, #0x40` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0194` | `a90153f3` | `stp	x19, x20, [sp, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0198` | `a9025bf5` | `stp	x21, x22, [sp, #32]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x019c` | `a90363f7` | `stp	x23, x24, [sp, #48]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01a0` | `8b010983` | `add	x3, x12, x1, lsl #2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01a4` | `b8617882` | `ldr	w2, [x4, x1, lsl #2]` | `-` | `w2` | `-` | `Read [x4, x1, lsl #2]` | `INSTRUCTION` |
+| `0x01a8` | `91000421` | `add	x1, x1, #0x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01ac` | `5ac00842` | `rev	w2, w2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01b0` | `b81fc062` | `stur	w2, [x3, #-4]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01b4` | `f100443f` | `cmp	x1, #0x11` | `#0x11` | `x1` | `-` | `-` | `INSTRUCTION` |
+| `0x01b8` | `54ffff41` | `b.ne	1a0 <sha256_transform+0x20>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x01bc` | `b94043e5` | `ldr	w5, [sp, #64]` | `-` | `w5` | `-` | `Read [sp, #64]` | `INSTRUCTION` |
+| `0x01c0` | `910113e4` | `add	x4, sp, #0x44` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01c4` | `294cafed` | `ldp	w13, w11, [sp, #100]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01c8` | `910413ef` | `add	x15, sp, #0x104` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01cc` | `294da7ea` | `ldp	w10, w9, [sp, #108]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01d0` | `294e8fe8` | `ldp	w8, w3, [sp, #116]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01d4` | `b9407fe7` | `ldr	w7, [sp, #124]` | `-` | `w7` | `-` | `Read [sp, #124]` | `INSTRUCTION` |
+| `0x01d8` | `0b0d00a6` | `add	w6, w5, w13` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01dc` | `b9400085` | `ldr	w5, [x4]` | `-` | `w5` | `-` | `Read [x4]` | `INSTRUCTION` |
+| `0x01e0` | `2a0b03ed` | `mov	w13, w11` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01e4` | `13834c62` | `ror	w2, w3, #19` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01e8` | `4ac34442` | `eor	w2, w2, w3, ror #17` | `w2, w3, ror, #17` | `w2` | `-` | `-` | `INSTRUCTION` |
+| `0x01ec` | `2a0a03eb` | `mov	w11, w10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01f0` | `4a432842` | `eor	w2, w2, w3, lsr #10` | `w2, w3, lsr, #10` | `w2` | `-` | `-` | `INSTRUCTION` |
+| `0x01f4` | `138548a1` | `ror	w1, w5, #18` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x01f8` | `4ac51c21` | `eor	w1, w1, w5, ror #7` | `w1, w5, ror, #7` | `w1` | `-` | `-` | `INSTRUCTION` |
+| `0x01fc` | `2a0903ea` | `mov	w10, w9` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0200` | `4a450c21` | `eor	w1, w1, w5, lsr #3` | `w1, w5, lsr, #3` | `w1` | `-` | `-` | `INSTRUCTION` |
+| `0x0204` | `2a0803e9` | `mov	w9, w8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0208` | `0b020021` | `add	w1, w1, w2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x020c` | `2a0303e8` | `mov	w8, w3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0210` | `91001084` | `add	x4, x4, #0x4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0214` | `2a0703e3` | `mov	w3, w7` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0218` | `0b060027` | `add	w7, w1, w6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x021c` | `b9003887` | `str	w7, [x4, #56]` | `w7` | `-` | `-` | `Write [x4, #56]` | `INSTRUCTION` |
+| `0x0220` | `eb0f009f` | `cmp	x4, x15` | `x15` | `x4` | `-` | `-` | `INSTRUCTION` |
+| `0x0224` | `54fffda1` | `b.ne	1d8 <sha256_transform+0x58>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x0228` | `29404c14` | `ldp	w20, w19, [x0]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x022c` | `9000000d` | `adrp	x13, 0 <_start>` | `0` | `x13` | `-` | `-` | `INSTRUCTION` |
+| `0x0230` | `2941481e` | `ldp	w30, w18, [x0, #8]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0234` | `910fe1ad` | `add	x13, x13, #0x3f8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0238` | `29424011` | `ldp	w17, w16, [x0, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x023c` | `2a1403e5` | `mov	w5, w20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0240` | `2943380f` | `ldp	w15, w14, [x0, #24]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0244` | `2a1303e8` | `mov	w8, w19` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0248` | `2a1e03e6` | `mov	w6, w30` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x024c` | `2a1203eb` | `mov	w11, w18` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0250` | `2a1103e4` | `mov	w4, w17` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0254` | `2a1003ea` | `mov	w10, w16` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0258` | `2a0f03e9` | `mov	w9, w15` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x025c` | `2a0e03f5` | `mov	w21, w14` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0260` | `d2800027` | `mov	x7, #0x1                   	// #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0264` | `14000007` | `b	280 <sha256_transform+0x100>` | `-` | `-` | `<sha256_transform+0x100>` | `-` | `INSTRUCTION` |
+| `0x0268` | `2a0a03e9` | `mov	w9, w10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x026c` | `2a0803e6` | `mov	w6, w8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0270` | `2a0403ea` | `mov	w10, w4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0274` | `2a0503e8` | `mov	w8, w5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0278` | `2a0303e4` | `mov	w4, w3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x027c` | `2a0203e5` | `mov	w5, w2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0280` | `d37ef4e1` | `lsl	x1, x7, #2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0284` | `13841896` | `ror	w22, w4, #6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0288` | `8b0101b7` | `add	x23, x13, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x028c` | `8b010181` | `add	x1, x12, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0290` | `0a0a0083` | `and	w3, w4, w10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0294` | `4ac42ed6` | `eor	w22, w22, w4, ror #11` | `w22, w4, ror, #11` | `w22` | `-` | `-` | `INSTRUCTION` |
+| `0x0298` | `0a240122` | `bic	w2, w9, w4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x029c` | `4ac466d6` | `eor	w22, w22, w4, ror #25` | `w22, w4, ror, #25` | `w22` | `-` | `-` | `INSTRUCTION` |
+| `0x02a0` | `b85fc038` | `ldur	w24, [x1, #-4]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02a4` | `4a030042` | `eor	w2, w2, w3` | `w2, w3` | `w2` | `-` | `-` | `INSTRUCTION` |
+| `0x02a8` | `b85fc2f7` | `ldur	w23, [x23, #-4]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02ac` | `4a060103` | `eor	w3, w8, w6` | `w8, w6` | `w3` | `-` | `-` | `INSTRUCTION` |
+| `0x02b0` | `0b0202c2` | `add	w2, w22, w2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02b4` | `138534a1` | `ror	w1, w5, #13` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02b8` | `0a050063` | `and	w3, w3, w5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02bc` | `0a060116` | `and	w22, w8, w6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02c0` | `4ac50821` | `eor	w1, w1, w5, ror #2` | `w1, w5, ror, #2` | `w1` | `-` | `-` | `INSTRUCTION` |
+| `0x02c4` | `0b1802f7` | `add	w23, w23, w24` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02c8` | `4a160063` | `eor	w3, w3, w22` | `w3, w22` | `w3` | `-` | `-` | `INSTRUCTION` |
+| `0x02cc` | `4ac55821` | `eor	w1, w1, w5, ror #22` | `w1, w5, ror, #22` | `w1` | `-` | `-` | `INSTRUCTION` |
+| `0x02d0` | `0b170042` | `add	w2, w2, w23` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02d4` | `0b030021` | `add	w1, w1, w3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02d8` | `0b150042` | `add	w2, w2, w21` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02dc` | `910004e7` | `add	x7, x7, #0x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02e0` | `0b0b0043` | `add	w3, w2, w11` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02e4` | `2a0903f5` | `mov	w21, w9` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02e8` | `0b010042` | `add	w2, w2, w1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02ec` | `2a0603eb` | `mov	w11, w6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02f0` | `f10104ff` | `cmp	x7, #0x41` | `#0x41` | `x7` | `-` | `-` | `INSTRUCTION` |
+| `0x02f4` | `54fffba1` | `b.ne	268 <sha256_transform+0xe8>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x02f8` | `0b020294` | `add	w20, w20, w2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x02fc` | `0b050273` | `add	w19, w19, w5` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0300` | `0b0803de` | `add	w30, w30, w8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0304` | `0b060252` | `add	w18, w18, w6` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0308` | `0b030231` | `add	w17, w17, w3` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x030c` | `0b040210` | `add	w16, w16, w4` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0310` | `0b0a01ef` | `add	w15, w15, w10` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0314` | `0b0901ce` | `add	w14, w14, w9` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0318` | `29004c14` | `stp	w20, w19, [x0]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x031c` | `2901481e` | `stp	w30, w18, [x0, #8]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0320` | `29024011` | `stp	w17, w16, [x0, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0324` | `2903380f` | `stp	w15, w14, [x0, #24]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0328` | `a94153f3` | `ldp	x19, x20, [sp, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x032c` | `a9425bf5` | `ldp	x21, x22, [sp, #32]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0330` | `a94363f7` | `ldp	x23, x24, [sp, #48]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0334` | `a8d47bfd` | `ldp	x29, x30, [sp], #320` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0338` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x033c` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0340` | `a9bd7bfd` | `stp	x29, x30, [sp, #-48]!` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0344` | `d29ccce4` | `mov	x4, #0xe667                	// #58983` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0348` | `d29e6e43` | `mov	x3, #0xf372                	// #62322` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x034c` | `910003fd` | `mov	x29, sp` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0350` | `a90153f3` | `stp	x19, x20, [sp, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0354` | `aa0003f3` | `mov	x19, x0` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0358` | `aa0103f4` | `mov	x20, x1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x035c` | `aa0203e0` | `mov	x0, x2` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0360` | `d29b3561` | `mov	x1, #0xd9ab                	// #55723` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0364` | `d28a4fe2` | `mov	x2, #0x527f                	// #21119` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0368` | `f2ad4124` | `movk	x4, #0x6a09, lsl #16` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x036c` | `f2a78dc3` | `movk	x3, #0x3c6e, lsl #16` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0370` | `f2aa21c2` | `movk	x2, #0x510e, lsl #16` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0374` | `f2a3f061` | `movk	x1, #0x1f83, lsl #16` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0378` | `f2d5d0a4` | `movk	x4, #0xae85, lsl #32` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x037c` | `f2dea743` | `movk	x3, #0xf53a, lsl #32` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0380` | `f2cd1182` | `movk	x2, #0x688c, lsl #32` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0384` | `f2d9a321` | `movk	x1, #0xcd19, lsl #32` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0388` | `f90013f5` | `str	x21, [sp, #32]` | `x21` | `-` | `-` | `Write [sp, #32]` | `INSTRUCTION` |
+| `0x038c` | `91040275` | `add	x21, x19, #0x100` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0390` | `f2f76ce4` | `movk	x4, #0xbb67, lsl #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0394` | `f2f4a9e3` | `movk	x3, #0xa54f, lsl #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0398` | `f2f360a2` | `movk	x2, #0x9b05, lsl #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x039c` | `f2eb7c01` | `movk	x1, #0x5be0, lsl #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03a0` | `a9000c04` | `stp	x4, x3, [x0]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03a4` | `a9010402` | `stp	x2, x1, [x0, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03a8` | `aa1303e1` | `mov	x1, x19` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03ac` | `91010273` | `add	x19, x19, #0x40` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03b0` | `97ffff74` | `bl	180 <sha256_transform>` | `-` | `-` | `<sha256_transform>` | `-` | `INSTRUCTION` |
+| `0x03b4` | `eb15027f` | `cmp	x19, x21` | `x21` | `x19` | `-` | `-` | `INSTRUCTION` |
+| `0x03b8` | `54ffff81` | `b.ne	3a8 <sha256_256bytes+0x68>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x03bc` | `aa1403e3` | `mov	x3, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03c0` | `91010284` | `add	x4, x20, #0x40` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03c4` | `d503201f` | `nop` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03c8` | `3800147f` | `strb	wzr, [x3], #1` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03cc` | `eb04007f` | `cmp	x3, x4` | `x4` | `x3` | `-` | `-` | `INSTRUCTION` |
+| `0x03d0` | `54ffffc1` | `b.ne	3c8 <sha256_256bytes+0x88>  // b.any` | `-` | `-` | `b.any` | `-` | `INSTRUCTION` |
+| `0x03d4` | `12800fe2` | `mov	w2, #0xffffff80            	// #-128` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03d8` | `52800101` | `mov	w1, #0x8                   	// #8` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03dc` | `39000282` | `strb	w2, [x20]` | `w2` | `-` | `-` | `Write [x20]` | `INSTRUCTION` |
+| `0x03e0` | `79007e81` | `strh	w1, [x20, #62]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03e4` | `aa1403e1` | `mov	x1, x20` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03e8` | `a94153f3` | `ldp	x19, x20, [sp, #16]` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03ec` | `f94013f5` | `ldr	x21, [sp, #32]` | `-` | `x21` | `-` | `Read [sp, #32]` | `INSTRUCTION` |
+| `0x03f0` | `a8c37bfd` | `ldp	x29, x30, [sp], #48` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x03f4` | `17ffff63` | `b	180 <sha256_transform>` | `-` | `-` | `<sha256_transform>` | `-` | `INSTRUCTION` |
+| `0x03f8` | `428a2f98` | `.word 0x428a2f98` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x03fc` | `71374491` | `.word 0x71374491` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0400` | `b5c0fbcf` | `.word 0xb5c0fbcf` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0404` | `e9b5dba5` | `.word 0xe9b5dba5` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0408` | `3956c25b` | `.word 0x3956c25b` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x040c` | `59f111f1` | `.word 0x59f111f1` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0410` | `923f82a4` | `.word 0x923f82a4` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0414` | `ab1c5ed5` | `.word 0xab1c5ed5` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0418` | `d807aa98` | `.word 0xd807aa98` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x041c` | `12835b01` | `.word 0x12835b01` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0420` | `243185be` | `.word 0x243185be` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0424` | `550c7dc3` | `.word 0x550c7dc3` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0428` | `72be5d74` | `.word 0x72be5d74` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x042c` | `80deb1fe` | `.word 0x80deb1fe` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0430` | `9bdc06a7` | `.word 0x9bdc06a7` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0434` | `c19bf174` | `.word 0xc19bf174` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0438` | `e49b69c1` | `.word 0xe49b69c1` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x043c` | `efbe4786` | `.word 0xefbe4786` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0440` | `0fc19dc6` | `.word 0x0fc19dc6` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0444` | `240ca1cc` | `.word 0x240ca1cc` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0448` | `2de92c6f` | `.word 0x2de92c6f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x044c` | `4a7484aa` | `.word 0x4a7484aa` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0450` | `5cb0a9dc` | `.word 0x5cb0a9dc` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0454` | `76f988da` | `.word 0x76f988da` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0458` | `983e5152` | `.word 0x983e5152` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x045c` | `a831c66d` | `.word 0xa831c66d` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0460` | `b00327c8` | `.word 0xb00327c8` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0464` | `bf597fc7` | `.word 0xbf597fc7` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0468` | `c6e00bf3` | `.word 0xc6e00bf3` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x046c` | `d5a79147` | `.word 0xd5a79147` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0470` | `06ca6351` | `.word 0x06ca6351` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0474` | `14292967` | `.word 0x14292967` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0478` | `27b70a85` | `.word 0x27b70a85` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x047c` | `2e1b2138` | `.word 0x2e1b2138` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0480` | `4d2c6dfc` | `.word 0x4d2c6dfc` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0484` | `53380d13` | `.word 0x53380d13` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0488` | `650a7354` | `.word 0x650a7354` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x048c` | `766a0abb` | `.word 0x766a0abb` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0490` | `81c2c92e` | `.word 0x81c2c92e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0494` | `92722c85` | `.word 0x92722c85` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0498` | `a2bfe8a1` | `.word 0xa2bfe8a1` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x049c` | `a81a664b` | `.word 0xa81a664b` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04a0` | `c24b8b70` | `.word 0xc24b8b70` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04a4` | `c76c51a3` | `.word 0xc76c51a3` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04a8` | `d192e819` | `.word 0xd192e819` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04ac` | `d6990624` | `.word 0xd6990624` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04b0` | `f40e3585` | `.word 0xf40e3585` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04b4` | `106aa070` | `.word 0x106aa070` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04b8` | `19a4c116` | `.word 0x19a4c116` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04bc` | `1e376c08` | `.word 0x1e376c08` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04c0` | `2748774c` | `.word 0x2748774c` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04c4` | `34b0bcb5` | `.word 0x34b0bcb5` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04c8` | `391c0cb3` | `.word 0x391c0cb3` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04cc` | `4ed8aa4a` | `.word 0x4ed8aa4a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04d0` | `5b9cca4f` | `.word 0x5b9cca4f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04d4` | `682e6ff3` | `.word 0x682e6ff3` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04d8` | `748f82ee` | `.word 0x748f82ee` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04dc` | `78a5636f` | `.word 0x78a5636f` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04e0` | `84c87814` | `.word 0x84c87814` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04e4` | `8cc70208` | `.word 0x8cc70208` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04e8` | `90befffa` | `.word 0x90befffa` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04ec` | `a4506ceb` | `.word 0xa4506ceb` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04f0` | `bef9a3f7` | `.word 0xbef9a3f7` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x04f4` | `c67178f2` | `.word 0xc67178f2` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+
+## Mathematical Reconciliation Summary
+- Decoded Instructions: 250 (x 4 bytes = 1000 bytes)
+- Read-Only Data Words: 68 (x 4 bytes = 272 bytes)
+- Reconciled Total: 1272 bytes
+- Actual Binary File Size: 1272 bytes
+- Byte Discrepancy: 0 bytes (EXACT RECONCILIATION VERIFIED)

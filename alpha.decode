@@ -6,114 +6,278 @@ Disassembly of section .text:
 
 0000000000000000 <_start>:
    0:	d5034fdf 	msr	daifset, #0xf
-   4:	580007e0 	ldr	x0, 100 <msg_refuse+0x12>
+   4:	580009a0 	ldr	x0, 138 <pinned_sha256_digest+0x20>
    8:	9100001f 	mov	sp, x0
-   c:	580007f4 	ldr	x20, 108 <msg_refuse+0x1a>
-  10:	10000595 	adr	x21, c0 <msg_awaken>
-  14:	94000026 	bl	ac <print_string>
-  18:	580007d6 	ldr	x22, 110 <msg_refuse+0x22>
-  1c:	580007e0 	ldr	x0, 118 <msg_refuse+0x2a>
+   c:	580009b4 	ldr	x20, 140 <pinned_sha256_digest+0x28>
+  10:	10000655 	adr	x21, d8 <msg_awaken>
+  14:	9400002c 	bl	c4 <print_string>
+  18:	58000996 	ldr	x22, 148 <pinned_sha256_digest+0x30>
+  1c:	580009a0 	ldr	x0, 150 <pinned_sha256_digest+0x38>
   20:	f90002c0 	str	x0, [x22]
-  24:	580007e0 	ldr	x0, 120 <msg_refuse+0x32>
+  24:	580009a0 	ldr	x0, 158 <pinned_sha256_digest+0x40>
   28:	f90006c0 	str	x0, [x22, #8]
   2c:	aa1403e0 	mov	x0, x20
   30:	f9000ac0 	str	x0, [x22, #16]
-  34:	580007a0 	ldr	x0, 128 <msg_refuse+0x3a>
+  34:	58000960 	ldr	x0, 160 <pinned_sha256_digest+0x48>
   38:	f9000ec0 	str	x0, [x22, #24]
   3c:	d2802000 	mov	x0, #0x100                 	// #256
   40:	f90012c0 	str	x0, [x22, #32]
-  44:	70000455 	adr	x21, cf <msg_verify>
-  48:	94000019 	bl	ac <print_string>
-  4c:	580006f7 	ldr	x23, 128 <msg_refuse+0x3a>
-  50:	d2802018 	mov	x24, #0x100                 	// #256
-  54:	580006f9 	ldr	x25, 130 <msg_refuse+0x42>
-  58:	5800071a 	ldr	x26, 138 <msg_refuse+0x4a>
-  5c:	384016fb 	ldrb	w27, [x23], #1
-  60:	ca1b0339 	eor	x25, x25, x27
-  64:	9b1a7f39 	mul	x25, x25, x26
-  68:	f1000718 	subs	x24, x24, #0x1
-  6c:	54ffff81 	b.ne	5c <_start+0x5c>  // b.any
-  70:	5800069c 	ldr	x28, 140 <msg_refuse+0x52>
-  74:	eb1c033f 	cmp	x25, x28
-  78:	54000121 	b.ne	9c <_start+0x9c>  // b.any
-  7c:	50000315 	adr	x21, de <msg_handoff>
-  80:	9400000b 	bl	ac <print_string>
-  84:	aa1603e0 	mov	x0, x22
-  88:	d2802001 	mov	x1, #0x100                 	// #256
-  8c:	580005e2 	ldr	x2, 148 <msg_refuse+0x5a>
-  90:	580004d3 	ldr	x19, 128 <msg_refuse+0x3a>
-  94:	d61f0260 	br	x19
-  98:	14000003 	b	a4 <_start+0xa4>
-  9c:	50000295 	adr	x21, ee <msg_refuse>
-  a0:	94000003 	bl	ac <print_string>
-  a4:	d503205f 	wfe
-  a8:	17ffffff 	b	a4 <_start+0xa4>
+  44:	70000515 	adr	x21, e7 <msg_verify>
+  48:	9400001f 	bl	c4 <print_string>
+  4c:	580008a0 	ldr	x0, 160 <pinned_sha256_digest+0x48>
+  50:	580008c1 	ldr	x1, 168 <pinned_sha256_digest+0x50>
+  54:	580008e2 	ldr	x2, 170 <pinned_sha256_digest+0x58>
+  58:	940000ba 	bl	340 <sha256_256bytes>
+  5c:	580008a2 	ldr	x2, 170 <pinned_sha256_digest+0x58>
+  60:	100005c3 	adr	x3, 118 <pinned_sha256_digest>
+  64:	a9401444 	ldp	x4, x5, [x2]
+  68:	a9401c66 	ldp	x6, x7, [x3]
+  6c:	eb06009f 	cmp	x4, x6
+  70:	54000221 	b.ne	b4 <_start+0xb4>  // b.any
+  74:	eb0700bf 	cmp	x5, x7
+  78:	540001e1 	b.ne	b4 <_start+0xb4>  // b.any
+  7c:	a9411444 	ldp	x4, x5, [x2, #16]
+  80:	a9411c66 	ldp	x6, x7, [x3, #16]
+  84:	eb06009f 	cmp	x4, x6
+  88:	54000161 	b.ne	b4 <_start+0xb4>  // b.any
+  8c:	eb0700bf 	cmp	x5, x7
+  90:	54000121 	b.ne	b4 <_start+0xb4>  // b.any
+  94:	50000315 	adr	x21, f6 <msg_handoff>
+  98:	9400000b 	bl	c4 <print_string>
+  9c:	aa1603e0 	mov	x0, x22
+  a0:	d2802001 	mov	x1, #0x100                 	// #256
+  a4:	580006a2 	ldr	x2, 178 <pinned_sha256_digest+0x60>
+  a8:	580005d3 	ldr	x19, 160 <pinned_sha256_digest+0x48>
+  ac:	d61f0260 	br	x19
+  b0:	14000003 	b	bc <_start+0xbc>
+  b4:	50000295 	adr	x21, 106 <msg_refuse>
+  b8:	94000003 	bl	c4 <print_string>
+  bc:	d503205f 	wfe
+  c0:	17ffffff 	b	bc <_start+0xbc>
 
-00000000000000ac <print_string>:
-  ac:	384016a0 	ldrb	w0, [x21], #1
-  b0:	34000060 	cbz	w0, bc <print_string+0x10>
-  b4:	b9000280 	str	w0, [x20]
-  b8:	17fffffd 	b	ac <print_string>
-  bc:	d65f03c0 	ret
+00000000000000c4 <print_string>:
+  c4:	384016a0 	ldrb	w0, [x21], #1
+  c8:	34000060 	cbz	w0, d4 <print_string+0x10>
+  cc:	b9000280 	str	w0, [x20]
+  d0:	17fffffd 	b	c4 <print_string>
+  d4:	d65f03c0 	ret
 
-00000000000000c0 <msg_awaken>:
-  c0:	48504c41 	.word	0x48504c41
-  c4:	41203a41 	.word	0x41203a41
-  c8:	454b4157 	.word	0x454b4157
-  cc:	0a4e      	.short	0x0a4e
+00000000000000d8 <msg_awaken>:
+  d8:	48504c41 	.word	0x48504c41
+  dc:	41203a41 	.word	0x41203a41
+  e0:	454b4157 	.word	0x454b4157
+  e4:	0a4e      	.short	0x0a4e
 	...
 
-00000000000000cf <msg_verify>:
-  cf:	41          	.byte	0x41
-  d0:	4148504c 	.word	0x4148504c
-  d4:	4556203a 	.word	0x4556203a
-  d8:	59464952 	.word	0x59464952
-  dc:	000a      	.short	0x000a
+00000000000000e7 <msg_verify>:
+  e7:	41          	.byte	0x41
+  e8:	4148504c 	.word	0x4148504c
+  ec:	4556203a 	.word	0x4556203a
+  f0:	59464952 	.word	0x59464952
+  f4:	000a      	.short	0x000a
 
-00000000000000de <msg_handoff>:
-  de:	4c41      	.short	0x4c41
-  e0:	3a414850 	.word	0x3a414850
-  e4:	4e414820 	.word	0x4e414820
-  e8:	46464f44 	.word	0x46464f44
-  ec:	000a      	.short	0x000a
+00000000000000f6 <msg_handoff>:
+  f6:	4c41      	.short	0x4c41
+  f8:	3a414850 	.word	0x3a414850
+  fc:	4e414820 	.word	0x4e414820
+ 100:	46464f44 	.word	0x46464f44
+ 104:	000a      	.short	0x000a
 
-00000000000000ee <msg_refuse>:
-  ee:	4c41      	.short	0x4c41
-  f0:	3a414850 	.word	0x3a414850
-  f4:	46455220 	.word	0x46455220
-  f8:	0a455355 	.word	0x0a455355
-  fc:	00          	.byte	0x00
-  fd:	00000000 	udf	#0
- 101:	f0          	.byte	0xf0
- 102:	401f      	.short	0x401f
- 104:	00000000 	.word	0x00000000
- 108:	09000000 	.word	0x09000000
- 10c:	00000000 	.word	0x00000000
- 110:	401fe000 	.word	0x401fe000
- 114:	00000000 	.word	0x00000000
- 118:	40000000 	.word	0x40000000
- 11c:	00000000 	.word	0x00000000
- 120:	08000000 	.word	0x08000000
- 124:	00000000 	.word	0x00000000
- 128:	40200000 	.word	0x40200000
- 12c:	00000000 	.word	0x00000000
- 130:	84222325 	.word	0x84222325
- 134:	cbf29ce4 	.word	0xcbf29ce4
- 138:	000001b3 	.word	0x000001b3
- 13c:	00000100 	.word	0x00000100
- 140:	dd96e28b 	.word	0xdd96e28b
- 144:	106e6d37 	.word	0x106e6d37
- 148:	49435330 	.word	0x49435330
- 14c:	50485953 	.word	0x50485953
- 150:	d503201f 	nop
- 154:	d503201f 	nop
- 158:	d503201f 	nop
- 15c:	d503201f 	nop
- 160:	d503201f 	nop
- 164:	d503201f 	nop
- 168:	d503201f 	nop
- 16c:	d503201f 	nop
- 170:	d503201f 	nop
- 174:	d503201f 	nop
- 178:	d503201f 	nop
- 17c:	d503201f 	nop
+0000000000000106 <msg_refuse>:
+ 106:	4c41      	.short	0x4c41
+ 108:	3a414850 	.word	0x3a414850
+ 10c:	46455220 	.word	0x46455220
+ 110:	0a455355 	.word	0x0a455355
+ 114:	00          	.byte	0x00
+ 115:	00          	.byte	0x00
+	...
+
+0000000000000118 <pinned_sha256_digest>:
+ 118:	e1d89bb1 	.word	0xe1d89bb1
+ 11c:	e0854eba 	.word	0xe0854eba
+ 120:	ccd2be5c 	.word	0xccd2be5c
+ 124:	756c8a2f 	.word	0x756c8a2f
+ 128:	f8c5ecc8 	.word	0xf8c5ecc8
+ 12c:	c0f90b4a 	.word	0xc0f90b4a
+ 130:	bd461fb7 	.word	0xbd461fb7
+ 134:	bf98374c 	.word	0xbf98374c
+ 138:	401ff000 	.word	0x401ff000
+ 13c:	00000000 	.word	0x00000000
+ 140:	09000000 	.word	0x09000000
+ 144:	00000000 	.word	0x00000000
+ 148:	401fe000 	.word	0x401fe000
+ 14c:	00000000 	.word	0x00000000
+ 150:	40000000 	.word	0x40000000
+ 154:	00000000 	.word	0x00000000
+ 158:	08000000 	.word	0x08000000
+ 15c:	00000000 	.word	0x00000000
+ 160:	40200000 	.word	0x40200000
+ 164:	00000000 	.word	0x00000000
+ 168:	401fe100 	.word	0x401fe100
+ 16c:	00000000 	.word	0x00000000
+ 170:	401fe080 	.word	0x401fe080
+ 174:	00000000 	.word	0x00000000
+ 178:	49435330 	.word	0x49435330
+ 17c:	50485953 	.word	0x50485953
+
+0000000000000180 <sha256_transform>:
+ 180:	a9ac7bfd 	stp	x29, x30, [sp, #-320]!
+ 184:	d1001024 	sub	x4, x1, #0x4
+ 188:	d2800021 	mov	x1, #0x1                   	// #1
+ 18c:	910003fd 	mov	x29, sp
+ 190:	910103ec 	add	x12, sp, #0x40
+ 194:	a90153f3 	stp	x19, x20, [sp, #16]
+ 198:	a9025bf5 	stp	x21, x22, [sp, #32]
+ 19c:	a90363f7 	stp	x23, x24, [sp, #48]
+ 1a0:	8b010983 	add	x3, x12, x1, lsl #2
+ 1a4:	b8617882 	ldr	w2, [x4, x1, lsl #2]
+ 1a8:	91000421 	add	x1, x1, #0x1
+ 1ac:	5ac00842 	rev	w2, w2
+ 1b0:	b81fc062 	stur	w2, [x3, #-4]
+ 1b4:	f100443f 	cmp	x1, #0x11
+ 1b8:	54ffff41 	b.ne	1a0 <sha256_transform+0x20>  // b.any
+ 1bc:	b94043e5 	ldr	w5, [sp, #64]
+ 1c0:	910113e4 	add	x4, sp, #0x44
+ 1c4:	294cafed 	ldp	w13, w11, [sp, #100]
+ 1c8:	910413ef 	add	x15, sp, #0x104
+ 1cc:	294da7ea 	ldp	w10, w9, [sp, #108]
+ 1d0:	294e8fe8 	ldp	w8, w3, [sp, #116]
+ 1d4:	b9407fe7 	ldr	w7, [sp, #124]
+ 1d8:	0b0d00a6 	add	w6, w5, w13
+ 1dc:	b9400085 	ldr	w5, [x4]
+ 1e0:	2a0b03ed 	mov	w13, w11
+ 1e4:	13834c62 	ror	w2, w3, #19
+ 1e8:	4ac34442 	eor	w2, w2, w3, ror #17
+ 1ec:	2a0a03eb 	mov	w11, w10
+ 1f0:	4a432842 	eor	w2, w2, w3, lsr #10
+ 1f4:	138548a1 	ror	w1, w5, #18
+ 1f8:	4ac51c21 	eor	w1, w1, w5, ror #7
+ 1fc:	2a0903ea 	mov	w10, w9
+ 200:	4a450c21 	eor	w1, w1, w5, lsr #3
+ 204:	2a0803e9 	mov	w9, w8
+ 208:	0b020021 	add	w1, w1, w2
+ 20c:	2a0303e8 	mov	w8, w3
+ 210:	91001084 	add	x4, x4, #0x4
+ 214:	2a0703e3 	mov	w3, w7
+ 218:	0b060027 	add	w7, w1, w6
+ 21c:	b9003887 	str	w7, [x4, #56]
+ 220:	eb0f009f 	cmp	x4, x15
+ 224:	54fffda1 	b.ne	1d8 <sha256_transform+0x58>  // b.any
+ 228:	29404c14 	ldp	w20, w19, [x0]
+ 22c:	9000000d 	adrp	x13, 0 <_start>
+ 230:	2941481e 	ldp	w30, w18, [x0, #8]
+ 234:	910fe1ad 	add	x13, x13, #0x3f8
+ 238:	29424011 	ldp	w17, w16, [x0, #16]
+ 23c:	2a1403e5 	mov	w5, w20
+ 240:	2943380f 	ldp	w15, w14, [x0, #24]
+ 244:	2a1303e8 	mov	w8, w19
+ 248:	2a1e03e6 	mov	w6, w30
+ 24c:	2a1203eb 	mov	w11, w18
+ 250:	2a1103e4 	mov	w4, w17
+ 254:	2a1003ea 	mov	w10, w16
+ 258:	2a0f03e9 	mov	w9, w15
+ 25c:	2a0e03f5 	mov	w21, w14
+ 260:	d2800027 	mov	x7, #0x1                   	// #1
+ 264:	14000007 	b	280 <sha256_transform+0x100>
+ 268:	2a0a03e9 	mov	w9, w10
+ 26c:	2a0803e6 	mov	w6, w8
+ 270:	2a0403ea 	mov	w10, w4
+ 274:	2a0503e8 	mov	w8, w5
+ 278:	2a0303e4 	mov	w4, w3
+ 27c:	2a0203e5 	mov	w5, w2
+ 280:	d37ef4e1 	lsl	x1, x7, #2
+ 284:	13841896 	ror	w22, w4, #6
+ 288:	8b0101b7 	add	x23, x13, x1
+ 28c:	8b010181 	add	x1, x12, x1
+ 290:	0a0a0083 	and	w3, w4, w10
+ 294:	4ac42ed6 	eor	w22, w22, w4, ror #11
+ 298:	0a240122 	bic	w2, w9, w4
+ 29c:	4ac466d6 	eor	w22, w22, w4, ror #25
+ 2a0:	b85fc038 	ldur	w24, [x1, #-4]
+ 2a4:	4a030042 	eor	w2, w2, w3
+ 2a8:	b85fc2f7 	ldur	w23, [x23, #-4]
+ 2ac:	4a060103 	eor	w3, w8, w6
+ 2b0:	0b0202c2 	add	w2, w22, w2
+ 2b4:	138534a1 	ror	w1, w5, #13
+ 2b8:	0a050063 	and	w3, w3, w5
+ 2bc:	0a060116 	and	w22, w8, w6
+ 2c0:	4ac50821 	eor	w1, w1, w5, ror #2
+ 2c4:	0b1802f7 	add	w23, w23, w24
+ 2c8:	4a160063 	eor	w3, w3, w22
+ 2cc:	4ac55821 	eor	w1, w1, w5, ror #22
+ 2d0:	0b170042 	add	w2, w2, w23
+ 2d4:	0b030021 	add	w1, w1, w3
+ 2d8:	0b150042 	add	w2, w2, w21
+ 2dc:	910004e7 	add	x7, x7, #0x1
+ 2e0:	0b0b0043 	add	w3, w2, w11
+ 2e4:	2a0903f5 	mov	w21, w9
+ 2e8:	0b010042 	add	w2, w2, w1
+ 2ec:	2a0603eb 	mov	w11, w6
+ 2f0:	f10104ff 	cmp	x7, #0x41
+ 2f4:	54fffba1 	b.ne	268 <sha256_transform+0xe8>  // b.any
+ 2f8:	0b020294 	add	w20, w20, w2
+ 2fc:	0b050273 	add	w19, w19, w5
+ 300:	0b0803de 	add	w30, w30, w8
+ 304:	0b060252 	add	w18, w18, w6
+ 308:	0b030231 	add	w17, w17, w3
+ 30c:	0b040210 	add	w16, w16, w4
+ 310:	0b0a01ef 	add	w15, w15, w10
+ 314:	0b0901ce 	add	w14, w14, w9
+ 318:	29004c14 	stp	w20, w19, [x0]
+ 31c:	2901481e 	stp	w30, w18, [x0, #8]
+ 320:	29024011 	stp	w17, w16, [x0, #16]
+ 324:	2903380f 	stp	w15, w14, [x0, #24]
+ 328:	a94153f3 	ldp	x19, x20, [sp, #16]
+ 32c:	a9425bf5 	ldp	x21, x22, [sp, #32]
+ 330:	a94363f7 	ldp	x23, x24, [sp, #48]
+ 334:	a8d47bfd 	ldp	x29, x30, [sp], #320
+ 338:	d65f03c0 	ret
+ 33c:	d503201f 	nop
+
+0000000000000340 <sha256_256bytes>:
+ 340:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+ 344:	d29ccce4 	mov	x4, #0xe667                	// #58983
+ 348:	d29e6e43 	mov	x3, #0xf372                	// #62322
+ 34c:	910003fd 	mov	x29, sp
+ 350:	a90153f3 	stp	x19, x20, [sp, #16]
+ 354:	aa0003f3 	mov	x19, x0
+ 358:	aa0103f4 	mov	x20, x1
+ 35c:	aa0203e0 	mov	x0, x2
+ 360:	d29b3561 	mov	x1, #0xd9ab                	// #55723
+ 364:	d28a4fe2 	mov	x2, #0x527f                	// #21119
+ 368:	f2ad4124 	movk	x4, #0x6a09, lsl #16
+ 36c:	f2a78dc3 	movk	x3, #0x3c6e, lsl #16
+ 370:	f2aa21c2 	movk	x2, #0x510e, lsl #16
+ 374:	f2a3f061 	movk	x1, #0x1f83, lsl #16
+ 378:	f2d5d0a4 	movk	x4, #0xae85, lsl #32
+ 37c:	f2dea743 	movk	x3, #0xf53a, lsl #32
+ 380:	f2cd1182 	movk	x2, #0x688c, lsl #32
+ 384:	f2d9a321 	movk	x1, #0xcd19, lsl #32
+ 388:	f90013f5 	str	x21, [sp, #32]
+ 38c:	91040275 	add	x21, x19, #0x100
+ 390:	f2f76ce4 	movk	x4, #0xbb67, lsl #48
+ 394:	f2f4a9e3 	movk	x3, #0xa54f, lsl #48
+ 398:	f2f360a2 	movk	x2, #0x9b05, lsl #48
+ 39c:	f2eb7c01 	movk	x1, #0x5be0, lsl #48
+ 3a0:	a9000c04 	stp	x4, x3, [x0]
+ 3a4:	a9010402 	stp	x2, x1, [x0, #16]
+ 3a8:	aa1303e1 	mov	x1, x19
+ 3ac:	91010273 	add	x19, x19, #0x40
+ 3b0:	97ffff74 	bl	180 <sha256_transform>
+ 3b4:	eb15027f 	cmp	x19, x21
+ 3b8:	54ffff81 	b.ne	3a8 <sha256_256bytes+0x68>  // b.any
+ 3bc:	aa1403e3 	mov	x3, x20
+ 3c0:	91010284 	add	x4, x20, #0x40
+ 3c4:	d503201f 	nop
+ 3c8:	3800147f 	strb	wzr, [x3], #1
+ 3cc:	eb04007f 	cmp	x3, x4
+ 3d0:	54ffffc1 	b.ne	3c8 <sha256_256bytes+0x88>  // b.any
+ 3d4:	12800fe2 	mov	w2, #0xffffff80            	// #-128
+ 3d8:	52800101 	mov	w1, #0x8                   	// #8
+ 3dc:	39000282 	strb	w2, [x20]
+ 3e0:	79007e81 	strh	w1, [x20, #62]
+ 3e4:	aa1403e1 	mov	x1, x20
+ 3e8:	a94153f3 	ldp	x19, x20, [sp, #16]
+ 3ec:	f94013f5 	ldr	x21, [sp, #32]
+ 3f0:	a8c37bfd 	ldp	x29, x30, [sp], #48
+ 3f4:	17ffff63 	b	180 <sha256_transform>
