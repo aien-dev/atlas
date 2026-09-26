@@ -7,3 +7,4 @@ physics-0-corrupt.bin
 test_sha_runner
 test_sha_runner.c
 test_sha.s
+test_sha256_kat
