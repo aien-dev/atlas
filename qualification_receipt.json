@@ -1,0 +1,18 @@
+{
+  "milestone": "MILESTONE_1_ALPHA",
+  "timestamp_epoch": 1790396190.7896683,
+  "canonical_artifact": "alpha.bin",
+  "sha256": "88035c7f3a5549b082580e73fdbe220552dd7f1828f1b6e7018423148e6322d5",
+  "duration_seconds": 3.012571334838867,
+  "gates": {
+    "ALPHA_ARTIFACT_IDENTITY_PASS": true,
+    "ALPHA_MACHINE_CONTRACT_PASS": true,
+    "ALPHA_AUDIT_PASS": true,
+    "ALPHA_BOOT_QEMU_PASS": true,
+    "ALPHA_HANDOFF_QEMU_PASS": true,
+    "ALPHA_CORRUPTION_REFUSAL_QEMU_PASS": true,
+    "ALPHA_FAIL_CLOSED_QEMU_PASS": true
+  },
+  "qualified": true,
+  "native_hardware_qualification_status": "PENDING_SEPARATE_NATIVE_GATES"
+}

@@ -1,0 +1,119 @@
+
+alpha.elf:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <_start>:
+   0:	d5034fdf 	msr	daifset, #0xf
+   4:	580007e0 	ldr	x0, 100 <msg_refuse+0x12>
+   8:	9100001f 	mov	sp, x0
+   c:	580007f4 	ldr	x20, 108 <msg_refuse+0x1a>
+  10:	10000595 	adr	x21, c0 <msg_awaken>
+  14:	94000026 	bl	ac <print_string>
+  18:	580007d6 	ldr	x22, 110 <msg_refuse+0x22>
+  1c:	580007e0 	ldr	x0, 118 <msg_refuse+0x2a>
+  20:	f90002c0 	str	x0, [x22]
+  24:	580007e0 	ldr	x0, 120 <msg_refuse+0x32>
+  28:	f90006c0 	str	x0, [x22, #8]
+  2c:	aa1403e0 	mov	x0, x20
+  30:	f9000ac0 	str	x0, [x22, #16]
+  34:	580007a0 	ldr	x0, 128 <msg_refuse+0x3a>
+  38:	f9000ec0 	str	x0, [x22, #24]
+  3c:	d2802000 	mov	x0, #0x100                 	// #256
+  40:	f90012c0 	str	x0, [x22, #32]
+  44:	70000455 	adr	x21, cf <msg_verify>
+  48:	94000019 	bl	ac <print_string>
+  4c:	580006f7 	ldr	x23, 128 <msg_refuse+0x3a>
+  50:	d2802018 	mov	x24, #0x100                 	// #256
+  54:	580006f9 	ldr	x25, 130 <msg_refuse+0x42>
+  58:	5800071a 	ldr	x26, 138 <msg_refuse+0x4a>
+  5c:	384016fb 	ldrb	w27, [x23], #1
+  60:	ca1b0339 	eor	x25, x25, x27
+  64:	9b1a7f39 	mul	x25, x25, x26
+  68:	f1000718 	subs	x24, x24, #0x1
+  6c:	54ffff81 	b.ne	5c <_start+0x5c>  // b.any
+  70:	5800069c 	ldr	x28, 140 <msg_refuse+0x52>
+  74:	eb1c033f 	cmp	x25, x28
+  78:	54000121 	b.ne	9c <_start+0x9c>  // b.any
+  7c:	50000315 	adr	x21, de <msg_handoff>
+  80:	9400000b 	bl	ac <print_string>
+  84:	aa1603e0 	mov	x0, x22
+  88:	d2802001 	mov	x1, #0x100                 	// #256
+  8c:	580005e2 	ldr	x2, 148 <msg_refuse+0x5a>
+  90:	580004d3 	ldr	x19, 128 <msg_refuse+0x3a>
+  94:	d61f0260 	br	x19
+  98:	14000003 	b	a4 <_start+0xa4>
+  9c:	50000295 	adr	x21, ee <msg_refuse>
+  a0:	94000003 	bl	ac <print_string>
+  a4:	d503205f 	wfe
+  a8:	17ffffff 	b	a4 <_start+0xa4>
+
+00000000000000ac <print_string>:
+  ac:	384016a0 	ldrb	w0, [x21], #1
+  b0:	34000060 	cbz	w0, bc <print_string+0x10>
+  b4:	b9000280 	str	w0, [x20]
+  b8:	17fffffd 	b	ac <print_string>
+  bc:	d65f03c0 	ret
+
+00000000000000c0 <msg_awaken>:
+  c0:	48504c41 	.word	0x48504c41
+  c4:	41203a41 	.word	0x41203a41
+  c8:	454b4157 	.word	0x454b4157
+  cc:	0a4e      	.short	0x0a4e
+	...
+
+00000000000000cf <msg_verify>:
+  cf:	41          	.byte	0x41
+  d0:	4148504c 	.word	0x4148504c
+  d4:	4556203a 	.word	0x4556203a
+  d8:	59464952 	.word	0x59464952
+  dc:	000a      	.short	0x000a
+
+00000000000000de <msg_handoff>:
+  de:	4c41      	.short	0x4c41
+  e0:	3a414850 	.word	0x3a414850
+  e4:	4e414820 	.word	0x4e414820
+  e8:	46464f44 	.word	0x46464f44
+  ec:	000a      	.short	0x000a
+
+00000000000000ee <msg_refuse>:
+  ee:	4c41      	.short	0x4c41
+  f0:	3a414850 	.word	0x3a414850
+  f4:	46455220 	.word	0x46455220
+  f8:	0a455355 	.word	0x0a455355
+  fc:	00          	.byte	0x00
+  fd:	00000000 	udf	#0
+ 101:	f0          	.byte	0xf0
+ 102:	401f      	.short	0x401f
+ 104:	00000000 	.word	0x00000000
+ 108:	09000000 	.word	0x09000000
+ 10c:	00000000 	.word	0x00000000
+ 110:	401fe000 	.word	0x401fe000
+ 114:	00000000 	.word	0x00000000
+ 118:	40000000 	.word	0x40000000
+ 11c:	00000000 	.word	0x00000000
+ 120:	08000000 	.word	0x08000000
+ 124:	00000000 	.word	0x00000000
+ 128:	40200000 	.word	0x40200000
+ 12c:	00000000 	.word	0x00000000
+ 130:	84222325 	.word	0x84222325
+ 134:	cbf29ce4 	.word	0xcbf29ce4
+ 138:	000001b3 	.word	0x000001b3
+ 13c:	00000100 	.word	0x00000100
+ 140:	dd96e28b 	.word	0xdd96e28b
+ 144:	106e6d37 	.word	0x106e6d37
+ 148:	49435330 	.word	0x49435330
+ 14c:	50485953 	.word	0x50485953
+ 150:	d503201f 	nop
+ 154:	d503201f 	nop
+ 158:	d503201f 	nop
+ 15c:	d503201f 	nop
+ 160:	d503201f 	nop
+ 164:	d503201f 	nop
+ 168:	d503201f 	nop
+ 16c:	d503201f 	nop
+ 170:	d503201f 	nop
+ 174:	d503201f 	nop
+ 178:	d503201f 	nop
+ 17c:	d503201f 	nop

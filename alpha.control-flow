@@ -1,0 +1,58 @@
+# ALPHA CONTROL FLOW GRAPH (CFG)
+## Target Profile: CONTRACT-QEMU-VIRT-AARCH64-M1
+
+```text
+[Entry: 0x00000000 (_start)]
+  │
+  ├─> Mask DAIF interrupts
+  ├─> Set SP = 0x401FF000
+  ├─> Set UART Base = 0x09000000
+  ├─> Call print_string(msg_awaken) ──> [print_string] ──> [Return]
+  ├─> Populate Boot Descriptor at 0x401FE000
+  ├─> Call print_string(msg_verify) ──> [print_string] ──> [Return]
+  │
+  ▼
+[.Lverify_loop: 0x0000005c] <───────────────┐
+  │                                          │
+  ├─> ldrb w27, [x23], #1                    │ (Loop 256 iterations)
+  ├─> eor x25, x25, x27                      │
+  ├─> mul x25, x25, x26                      │
+  ├─> subs x24, x24, #1                      │
+  └─> b.ne .Lverify_loop ────────────────────┘
+  │
+  ▼
+[Check Digest: 0x00000070]
+  │
+  ├─> cmp x25, x28 (0x106e6d37dd96e28b)
+  │
+  ├── [MISMATCH: b.ne] ─────────────────────┐
+  │                                         │
+  ▼ [MATCH]                                 ▼ [.Lrefuse_handoff: 0x0000009c]
+[Emit Handoff: 0x00000078]                    │
+  │                                           ├─> Call print_string(msg_refuse)
+  ├─> Call print_string(msg_handoff)          │
+  │                                           ▼
+  ▼                                         [.Lquiescent_halt: 0x000000a4] <──┐
+[Setup PHYSICS_ENTRY_ABI: 0x00000084]         │                               │
+  │                                           ├─> wfe                         │ (Quiescent halt)
+  ├─> mov x0, 0x401FE000                      └─> b .Lquiescent_halt ─────────┘
+  ├─> mov x1, 256
+  ├─> ldr x2, 0x5048595349435330
+  ├─> ldr x19, 0x40200000
+  │
+  ▼
+[Handoff: 0x00000094]
+  │
+  ├─> br x19 (Direct branch to PHYSICS-0 @ 0x40200000)
+  │
+  ▼ [UNREACHABLE FALLTHROUGH]
+  └─> b .Lquiescent_halt
+
+[Subroutine: print_string: 0x000000ac]
+  │
+  ├─> .Lprint_char: ldrb w0, [x21], #1
+  ├─> cbz w0, .Lprint_ret
+  ├─> str w0, [x20] (UART MMIO Write)
+  ├─> b .Lprint_char
+  └─> .Lprint_ret: ret
+```

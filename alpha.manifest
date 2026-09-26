@@ -1,0 +1,33 @@
+{
+  "artifact": "alpha.bin",
+  "artifact_type": "canonical_bootstrap_seed_root",
+  "classification": "Sovereign Machine Root Artifact (A_0)",
+  "machine_contract": "CONTRACT-QEMU-VIRT-AARCH64-M1",
+  "sha256": "88035c7f3a5549b082580e73fdbe220552dd7f1828f1b6e7018423148e6322d5",
+  "size_bytes": 384,
+  "entry_address": "0x00000000",
+  "entry_exception_level": "contract-defined (EL1 or EL2)",
+  "target_physics_entry": "0x40200000",
+  "target_physics_payload_size_bytes": 256,
+  "physics_pinned_digest": "0x106e6d37dd96e28b",
+  "physics_digest_algorithm": "fnv1a_64",
+  "physics_entry_abi": {
+    "x0": "0x401FE000 (pointer to Machine Boot Descriptor)",
+    "x1": "0x00000100 (256 bytes payload size)",
+    "x2": "0x5048595349435330 (magic cookie 'PHYSICS0')",
+    "x3_x18": "UNSPECIFIED",
+    "daif": "0x3c0 (all interrupts masked)",
+    "sp": "0x401FF000 (16-byte aligned)",
+    "pc": "0x40200000"
+  },
+  "supporting_evidence": [
+    "alpha.bin",
+    "alpha.manifest",
+    "alpha.sha256",
+    "alpha.decode",
+    "alpha.memory-map",
+    "alpha.control-flow",
+    "alpha.audit"
+  ],
+  "status": "RATIFIED_CANONICAL_SEED_V1"
+}

@@ -1,0 +1,49 @@
+{
+  "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M1",
+  "version": "1.0.0",
+  "target_platform": "qemu-virt-aarch64",
+  "architecture": {
+    "arch": "aarch64",
+    "endianness": "little",
+    "entry_exception_level": "contract-defined (EL1 or EL2)",
+    "physics_target_exception_level": "contract-defined (matches entry EL)"
+  },
+  "memory_map": {
+    "alpha_entry_base": "0x00000000",
+    "alpha_max_size_bytes": 65536,
+    "scratchpad_stack_base": "0x401F0000",
+    "scratchpad_stack_top": "0x401FF000",
+    "boot_descriptor_address": "0x401FE000",
+    "physics_payload_base": "0x40200000",
+    "physics_payload_size_bytes": 64,
+    "uart_mmio_base": "0x09000000",
+    "uart_flags_offset": 24,
+    "uart_txff_mask": 32
+  },
+  "physics_entry_abi": {
+    "x0": "pointer to Machine Boot Descriptor at 0x401FE000",
+    "x1": "physics payload size in bytes (0x40)",
+    "x2": "verification cookie (0x5048595349435330 = ASCII 'PHYSICS0')",
+    "x3_x18": "UNSPECIFIED",
+    "daif": "0x3c0 (all interrupts masked: D=1, A=1, I=1, F=1)",
+    "sp": "0x401FF000 (16-byte aligned)",
+    "pc": "0x40200000 (physics payload entry point)"
+  },
+  "hardware_boundaries": {
+    "secondary_cores": "ALPHA MUST NOT WAKE SECONDARY CORES. IF A SECONDARY CORE ENTERS ALPHA UNDER THE MACHINE CONTRACT, ALPHA PLACES IT IN A BOUNDED QUIESCENT STATE UNTIL PHYSICS CLAIMS IT.",
+    "mmu_page_tables": "DISABLED OR IDENTITY-MAPPED PER CONTRACT; OWNED BY PHYSICS",
+    "gic_interrupts": "LEFT MASKED; INITIALIZED BY PHYSICS",
+    "smmu": "DO NOT RECONFIGURE; ENTRY STATE IS CONTRACT-DEFINED",
+    "timers": "INTERRUPTS MASKED; OWNED BY PHYSICS",
+    "serial_console": "POLLED MMIO TX ONLY; NO IRQ; OWNED BY PHYSICS",
+    "storage": "NO OWNERSHIP; NO DRIVERS; OWNED BY PHYSICS",
+    "nic": "DO NOT INITIALIZE OR RECONFIGURE",
+    "gpu": "DO NOT INITIALIZE, RESET, POWER-TRANSITION, OR RECONFIGURE"
+  },
+  "physics_verification": {
+    "scheme": "pinned_expected_digest",
+    "digest_algorithm": "fnv1a_64",
+    "offset_basis": "0xcbf29ce484222325",
+    "prime": "0x00000100000001b3"
+  }
+}
