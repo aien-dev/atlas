@@ -8,3 +8,5 @@ test_sha_runner
 test_sha_runner.c
 test_sha.s
 test_sha256_kat
+tools/m1tool
+build/
