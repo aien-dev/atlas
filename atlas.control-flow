@@ -1,0 +1,58 @@
+# ATLAS CONTROL FLOW GRAPH (CFG)
+## Target Profile: CONTRACT-QEMU-VIRT-AARCH64-M1 (Cryptographic SHA-256 + Disjoint Stack)
+*Formerly designated Alpha in early bootstrap drafting.*
+
+```text
+[Entry: 0x00000000 (_start)]
+  │
+  ├─> Mask DAIF interrupts (msr daifset, #0xf)
+  ├─> Set SP = 0x401FC000 (Scratchpad stack, disjoint from descriptor by 8 KiB gap)
+  ├─> Set UART Base = 0x09000000 (x20)
+  ├─> Call print_string(msg_awaken) ──> [print_string] ──> [Return]
+  ├─> Populate Boot Descriptor at 0x401FE000 (x22)
+  ├─> Call print_string(msg_verify) ──> [print_string] ──> [Return]
+  │
+  ▼
+[Cryptographic Verification: sha256_256bytes]
+  │
+  ├─> Arg 0: x0 = 0x40200000 (Physics payload base)
+  ├─> Arg 1: x1 = 0x401FE100 (Padding & block scratch buffer)
+  ├─> Arg 2: x2 = 0x401FE080 (32-byte digest output buffer)
+  ├─> bl sha256_256bytes (NIST FIPS 180-4 pure AArch64 software implementation)
+  │
+  ▼
+[Compare Digest: 32-Byte Constant-Time Check]
+  │
+  ├─> Compare 8 x 32-bit words against pinned digest (e1d89bb1...374c)
+  │
+  ├── [ANY MISMATCH: b.ne] ─────────────────┐
+  │                                         │
+  ▼ [EXACT MATCH]                           ▼ [.Lrefuse_handoff]
+[Emit Handoff Checkpoint]                   │
+  │                                         ├─> Call print_string(msg_refuse)
+  ├─> Call print_string(msg_handoff)        │
+  │                                         ▼
+  ▼                                       [.Lquiescent_halt] <──────┐
+[Setup PHYSICS_ENTRY_ABI]                   │                       │
+  │                                         ├─> wfe                 │ (Quiescent halt)
+  ├─> mov x0, 0x401FE000 (Descriptor)       └─> b .Lquiescent_halt ─┘
+  ├─> mov x1, 256 (Payload size)
+  ├─> ldr x2, =0x5048595349435330 ('PHYSICS0' cookie)
+  ├─> ldr x19, =0x40200000 (Static Target Proof: literal loaded directly into x19)
+  │
+  ▼
+[Handoff to Physics]
+  │
+  ├─> br x19 (Branch to target-proven address 0x40200000)
+  │
+  ▼ [UNREACHABLE FALLTHROUGH TRAP]
+  └─> b .Lquiescent_halt
+
+[Subroutine: print_string]
+  │
+  ├─> .Lprint_char: ldrb w0, [x21], #1
+  ├─> cbz w0, .Lprint_ret
+  ├─> str w0, [x20] (UART MMIO Polled Write)
+  ├─> b .Lprint_char
+  └─> .Lprint_ret: ret
+```

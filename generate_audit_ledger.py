@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generates the mathematically reconciled 8-column Alpha Machine Operation Audit Ledger.
+Generates the mathematically reconciled 8-column Atlas Machine Operation Audit Ledger.
 Reconciles:
   Decoded Instructions * 4 + Read-Only Data/Literal Words * 4 = Exact Binary Size in Bytes.
 """
@@ -10,34 +10,35 @@ import re
 import subprocess
 
 def generate_reconciled_audit():
-    alpha_bin = "alpha.bin"
-    alpha_elf = "alpha.elf"
-    audit_file = "alpha.audit"
+    atlas_bin = "atlas.bin"
+    atlas_elf = "atlas.elf"
+    audit_file = "atlas.audit"
     
-    bin_size = os.path.getsize(alpha_bin)
+    bin_size = os.path.getsize(atlas_bin)
     total_words = bin_size // 4
     assert bin_size % 4 == 0, f"Binary size {bin_size} is not a multiple of 4!"
     
     # Run objdump on full binary / elf
-    proc = subprocess.run(["objdump", "-d", alpha_elf], stdout=subprocess.PIPE, text=True, check=True)
+    proc = subprocess.run(["aarch64-linux-gnu-objdump", "-d", atlas_elf], stdout=subprocess.PIPE, text=True, check=True)
     decode_text = proc.stdout
     
-    with open("alpha.decode", "w") as f:
+    with open("atlas.decode", "w") as f:
         f.write(decode_text)
         
     audit_rows = [
-        "# ALPHA MACHINE OPERATION AUDIT LEDGER",
+        "# ATLAS MACHINE OPERATION AUDIT LEDGER",
         "## Normative Mathematical Accounting: 100% Byte Reconciliation",
+        "Formerly designated Alpha in early bootstrap drafting.",
         "",
-        f"- **Binary Artifact:** `alpha.bin` ({bin_size} bytes)",
+        f"- **Binary Artifact:** `atlas.bin` ({bin_size} bytes)",
         f"- **Total 32-bit Words:** {total_words} words",
         "",
         "| Offset | Raw Bytes | Decoded Operation / Content | Inputs | Outputs | Branch Target | Memory Accessed | Classification |",
         "| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |"
     ]
     
-    # Read raw 32-bit words from alpha.bin
-    with open(alpha_bin, "rb") as f:
+    # Read raw 32-bit words from atlas.bin
+    with open(atlas_bin, "rb") as f:
         raw_bytes = f.read()
         
     # Map offsets to decoded lines

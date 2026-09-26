@@ -127,57 +127,123 @@ sha256_transform:
 	.size	sha256_transform, .-sha256_transform
 	.align	2
 	.p2align 4,,11
+	.global	sha256_compute
+	.type	sha256_compute, %function
+sha256_compute:
+	stp	x29, x30, [sp, -64]!
+	mov	x5, 58983
+	mov	x4, 62322
+	mov	x29, sp
+	stp	x21, x22, [sp, 32]
+	mov	x22, x3
+	mov	x3, 21119
+	str	x23, [sp, 48]
+	mov	x23, x1
+	mov	x1, 55723
+	movk	x5, 0x6a09, lsl 16
+	movk	x4, 0x3c6e, lsl 16
+	movk	x3, 0x510e, lsl 16
+	movk	x1, 0x1f83, lsl 16
+	movk	x5, 0xae85, lsl 32
+	movk	x4, 0xf53a, lsl 32
+	movk	x3, 0x688c, lsl 32
+	movk	x1, 0xcd19, lsl 32
+	stp	x19, x20, [sp, 16]
+	movk	x5, 0xbb67, lsl 48
+	movk	x4, 0xa54f, lsl 48
+	movk	x3, 0x9b05, lsl 48
+	movk	x1, 0x5be0, lsl 48
+	stp	x5, x4, [x22]
+	mov	x19, x0
+	stp	x3, x1, [x22, 16]
+	mov	x21, x2
+	cmp	x23, 63
+	bls	.L21
+	sub	x20, x23, #64
+	and	x20, x20, -64
+	add	x20, x20, 64
+	add	x20, x0, x20
+	.p2align 3,,7
+.L12:
+	mov	x1, x19
+	mov	x0, x22
+	add	x19, x19, 64
+	bl	sha256_transform
+	cmp	x19, x20
+	bne	.L12
+	and	x2, x23, 63
+.L11:
+	mov	x0, x21
+	add	x4, x21, 128
+	.p2align 3,,7
+.L13:
+	strb	wzr, [x0], 1
+	cmp	x0, x4
+	bne	.L13
+	cbz	x2, .L14
+	mov	x0, 0
+	.p2align 3,,7
+.L15:
+	ldrb	w1, [x20, x0]
+	strb	w1, [x21, x0]
+	add	x0, x0, 1
+	cmp	x0, x2
+	bne	.L15
+	mov	w1, -128
+	strb	w1, [x21, x0]
+	mov	w19, 2
+	mov	w1, 120
+	cmp	x0, 55
+	bls	.L17
+.L18:
+	lsl	x23, x23, 3
+	add	x1, x21, w1, uxtw
+	mov	w0, 56
+	.p2align 3,,7
+.L19:
+	lsr	x2, x23, x0
+	sub	w0, w0, #8
+	strb	w2, [x1], 1
+	cmn	w0, #8
+	bne	.L19
+	mov	x0, x22
+	mov	x1, x21
+	bl	sha256_transform
+	cmp	w19, 2
+	beq	.L29
+	ldp	x19, x20, [sp, 16]
+	ldp	x21, x22, [sp, 32]
+	ldr	x23, [sp, 48]
+	ldp	x29, x30, [sp], 64
+	ret
+.L14:
+	mov	w0, -128
+	strb	w0, [x21]
+.L17:
+	mov	w1, 56
+	mov	w19, 1
+	b	.L18
+.L29:
+	ldp	x19, x20, [sp, 16]
+	add	x1, x21, 64
+	ldp	x21, x22, [sp, 32]
+	ldr	x23, [sp, 48]
+	ldp	x29, x30, [sp], 64
+	b	sha256_transform
+.L21:
+	mov	x20, x0
+	mov	x2, x23
+	b	.L11
+	.size	sha256_compute, .-sha256_compute
+	.align	2
+	.p2align 4,,11
 	.global	sha256_256bytes
 	.type	sha256_256bytes, %function
 sha256_256bytes:
-	stp	x29, x30, [sp, -48]!
-	mov	x4, 58983
-	mov	x3, 62322
-	mov	x29, sp
-	stp	x19, x20, [sp, 16]
-	mov	x19, x0
-	mov	x20, x1
-	mov	x0, x2
-	mov	x1, 55723
-	mov	x2, 21119
-	movk	x4, 0x6a09, lsl 16
-	movk	x3, 0x3c6e, lsl 16
-	movk	x2, 0x510e, lsl 16
-	movk	x1, 0x1f83, lsl 16
-	movk	x4, 0xae85, lsl 32
-	movk	x3, 0xf53a, lsl 32
-	movk	x2, 0x688c, lsl 32
-	movk	x1, 0xcd19, lsl 32
-	str	x21, [sp, 32]
-	add	x21, x19, 256
-	movk	x4, 0xbb67, lsl 48
-	movk	x3, 0xa54f, lsl 48
-	movk	x2, 0x9b05, lsl 48
-	movk	x1, 0x5be0, lsl 48
-	stp	x4, x3, [x0]
-	stp	x2, x1, [x0, 16]
-.L11:
-	mov	x1, x19
-	add	x19, x19, 64
-	bl	sha256_transform
-	cmp	x19, x21
-	bne	.L11
-	mov	x3, x20
-	add	x4, x20, 64
-	.p2align 3,,7
-.L12:
-	strb	wzr, [x3], 1
-	cmp	x3, x4
-	bne	.L12
-	mov	w2, -128
-	mov	w1, 8
-	strb	w2, [x20]
-	strh	w1, [x20, 62]
-	mov	x1, x20
-	ldp	x19, x20, [sp, 16]
-	ldr	x21, [sp, 32]
-	ldp	x29, x30, [sp], 48
-	b	sha256_transform
+	mov	x3, x2
+	mov	x2, x1
+	mov	x1, 256
+	b	sha256_compute
 	.size	sha256_256bytes, .-sha256_256bytes
 	.section	.rodata
 	.align	3

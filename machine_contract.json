@@ -1,7 +1,8 @@
 {
   "contract_id": "CONTRACT-QEMU-VIRT-AARCH64-M1",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "target_platform": "qemu-virt-aarch64",
+  "historical_designation": "CONTRACT-QEMU-VIRT-AARCH64-M1 (Alpha)",
   "architecture": {
     "arch": "aarch64",
     "endianness": "little",
@@ -9,16 +10,30 @@
     "physics_target_exception_level": "contract-defined (matches entry EL)"
   },
   "memory_map": {
+    "atlas_entry_base": "0x00000000",
+    "atlas_max_size_bytes": 65536,
     "alpha_entry_base": "0x00000000",
     "alpha_max_size_bytes": 65536,
     "scratchpad_stack_base": "0x401F0000",
-    "scratchpad_stack_top": "0x401FF000",
+    "scratchpad_stack_top": "0x401FC000",
+    "guard_gap_base": "0x401FC000",
+    "guard_gap_size_bytes": 8192,
     "boot_descriptor_address": "0x401FE000",
+    "boot_descriptor_size_bytes": 64,
+    "digest_scratch_address": "0x401FE080",
+    "sha_padding_scratch_address": "0x401FE100",
     "physics_payload_base": "0x40200000",
     "physics_payload_size_bytes": 256,
     "uart_mmio_base": "0x09000000",
     "uart_flags_offset": 24,
     "uart_txff_mask": 32
+  },
+  "disjoint_separation_proof": {
+    "stack_window": "[0x401F0000, 0x401FC000)",
+    "descriptor_window": "[0x401FE000, 0x401FE040)",
+    "separation_gap_bytes": 8192,
+    "growth_direction": "downward (decreasing addresses)",
+    "intersection": "EMPTY_SET"
   },
   "physics_entry_abi": {
     "x0": "pointer to Machine Boot Descriptor at 0x401FE000",
@@ -26,11 +41,11 @@
     "x2": "verification cookie (0x5048595349435330 = ASCII 'PHYSICS0')",
     "x3_x18": "UNSPECIFIED",
     "daif": "0x3c0 (all interrupts masked: D=1, A=1, I=1, F=1)",
-    "sp": "0x401FF000 (16-byte aligned)",
+    "sp": "0x401FC000 (16-byte aligned, strictly disjoint from 0x401FE000)",
     "pc": "0x40200000 (physics payload entry point)"
   },
   "hardware_boundaries": {
-    "secondary_cores": "ALPHA MUST NOT WAKE SECONDARY CORES. IF A SECONDARY CORE ENTERS ALPHA UNDER THE MACHINE CONTRACT, ALPHA PLACES IT IN A BOUNDED QUIESCENT STATE UNTIL PHYSICS CLAIMS IT.",
+    "secondary_cores": "ATLAS MUST NOT WAKE SECONDARY CORES. IF A SECONDARY CORE ENTERS ATLAS UNDER THE MACHINE CONTRACT, ATLAS PLACES IT IN A BOUNDED QUIESCENT STATE UNTIL PHYSICS CLAIMS IT.",
     "mmu_page_tables": "DISABLED OR IDENTITY-MAPPED PER CONTRACT; OWNED BY PHYSICS",
     "gic_interrupts": "LEFT MASKED; INITIALIZED BY PHYSICS",
     "smmu": "DO NOT RECONFIGURE; ENTRY STATE IS CONTRACT-DEFINED",

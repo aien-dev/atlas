@@ -1,7 +1,8 @@
-# ALPHA MACHINE OPERATION AUDIT LEDGER
+# ATLAS MACHINE OPERATION AUDIT LEDGER
 ## Normative Mathematical Accounting: 100% Byte Reconciliation
+Formerly designated Alpha in early bootstrap drafting.
 
-- **Binary Artifact:** `alpha.bin` (1480 bytes)
+- **Binary Artifact:** `atlas.bin` (1480 bytes)
 - **Total 32-bit Words:** 370 words
 
 | Offset | Raw Bytes | Decoded Operation / Content | Inputs | Outputs | Branch Target | Memory Accessed | Classification |
@@ -60,19 +61,19 @@
 | `0x00cc` | `b9000280` | `str	w0, [x20]` | `w0` | `-` | `-` | `Write [x20]` | `INSTRUCTION` |
 | `0x00d0` | `17fffffd` | `b	c4 <print_string>` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x00d4` | `d65f03c0` | `ret` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00d8` | `48504c41` | `.word	0x48504c41` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00dc` | `41203a41` | `.word	0x41203a41` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00d8` | `414c5441` | `.word	0x414c5441` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00dc` | `41203a53` | `.word	0x41203a53` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x00e0` | `454b4157` | `.word	0x454b4157` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x00e4` | `41000a4e` | `.word 0x41000a4e` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x00e8` | `4148504c` | `.word	0x4148504c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00e8` | `53414c54` | `.word	0x53414c54` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x00ec` | `4556203a` | `.word	0x4556203a` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x00f0` | `59464952` | `.word	0x59464952` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x00f4` | `4c41000a` | `.word 0x4c41000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x00f8` | `3a414850` | `.word	0x3a414850` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x00f4` | `5441000a` | `.word 0x5441000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x00f8` | `3a53414c` | `.word	0x3a53414c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x00fc` | `4e414820` | `.word	0x4e414820` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x0100` | `46464f44` | `.word	0x46464f44` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
-| `0x0104` | `4c41000a` | `.word 0x4c41000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
-| `0x0108` | `3a414850` | `.word	0x3a414850` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
+| `0x0104` | `5441000a` | `.word 0x5441000a` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |
+| `0x0108` | `3a53414c` | `.word	0x3a53414c` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x010c` | `46455220` | `.word	0x46455220` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x0110` | `0a455355` | `.word	0x0a455355` | `-` | `-` | `-` | `-` | `INSTRUCTION` |
 | `0x0114` | `00000000` | `.word 0x00000000` | `-` | `-` | `-` | `Read-Only Constant` | `RODATA / CONSTANT` |

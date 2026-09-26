@@ -1,9 +1,10 @@
 {
-  "artifact": "alpha.bin",
+  "artifact": "atlas.bin",
   "artifact_type": "canonical_bootstrap_seed_root",
+  "historical_designation": "alpha.bin (Milestone 1 early draft)",
   "classification": "Sovereign Machine Root Artifact (A_0)",
   "machine_contract": "CONTRACT-QEMU-VIRT-AARCH64-M1",
-  "sha256": "01f98efb96a12d0f5456a5a1755d0449e04a0c2ccb2ab62f916062ae6781818d",
+  "sha256": "f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5",
   "size_bytes": 1480,
   "word_count_32bit": 370,
   "reconciliation": {
@@ -34,13 +35,13 @@
     "pc": "0x40200000"
   },
   "supporting_evidence": [
-    "alpha.bin",
-    "alpha.manifest",
-    "alpha.sha256",
-    "alpha.decode",
-    "alpha.memory-map",
-    "alpha.control-flow",
-    "alpha.audit"
+    "atlas.bin",
+    "atlas.manifest",
+    "atlas.sha256",
+    "atlas.decode",
+    "atlas.memory-map",
+    "atlas.control-flow",
+    "atlas.audit"
   ],
   "status": "RATIFIED_CANONICAL_SEED_V1_REQUALIFIED"
 }

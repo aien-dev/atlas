@@ -1,6 +1,6 @@
 #include <stdint.h>
+#include <stddef.h>
 
-// Standard SHA-256 implementation
 static const uint32_t K[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -64,8 +64,8 @@ void sha256_transform(uint32_t state[8], const uint8_t data[64]) {
     state[4] += e; state[5] += f; state[6] += g; state[7] += h;
 }
 
-// Compute SHA-256 of 256 bytes payload in scratchpad buffer
-void sha256_256bytes(const uint8_t *payload, uint8_t *scratch_buf, uint32_t out_digest[8]) {
+// General SHA-256 for any length with scratch buffer
+void sha256_compute(const uint8_t *data, uint64_t len, uint8_t scratch_buf[128], uint32_t out_digest[8]) {
     out_digest[0] = 0x6a09e667;
     out_digest[1] = 0xbb67ae85;
     out_digest[2] = 0x3c6ef372;
@@ -75,17 +75,33 @@ void sha256_256bytes(const uint8_t *payload, uint8_t *scratch_buf, uint32_t out_
     out_digest[6] = 0x1f83d9ab;
     out_digest[7] = 0x5be0cd19;
 
-    // 4 full 64-byte blocks from payload
-    for (int b = 0; b < 4; b++) {
-        sha256_transform(out_digest, payload + b * 64);
+    uint64_t remaining = len;
+    const uint8_t *ptr = data;
+    while (remaining >= 64) {
+        sha256_transform(out_digest, ptr);
+        ptr += 64;
+        remaining -= 64;
     }
 
-    // 5th block: padding block (64 bytes)
-    // 0x80 followed by zeros, then length in bits: 2048 = 0x800 at offset 60
-    for (int i = 0; i < 64; i++) scratch_buf[i] = 0;
-    scratch_buf[0] = 0x80;
-    scratch_buf[62] = 0x08; // 2048 bits in big endian (0x0000000000000800)
-    scratch_buf[63] = 0x00;
+    // Pad in scratchpad
+    for (int i = 0; i < 128; i++) scratch_buf[i] = 0;
+    for (uint64_t i = 0; i < remaining; i++) scratch_buf[i] = ptr[i];
+    scratch_buf[remaining] = 0x80;
+
+    int pad_blocks = (remaining >= 56) ? 2 : 1;
+    uint64_t total_bits = len * 8;
+    int len_offset = pad_blocks * 64 - 8;
+    for (int i = 0; i < 8; i++) {
+        scratch_buf[len_offset + i] = (total_bits >> ((7 - i) * 8)) & 0xff;
+    }
 
     sha256_transform(out_digest, scratch_buf);
+    if (pad_blocks == 2) {
+        sha256_transform(out_digest, scratch_buf + 64);
+    }
+}
+
+// Specialization for 256-byte Physics payload
+void sha256_256bytes(const uint8_t *payload, uint8_t *scratch_buf, uint32_t out_digest[8]) {
+    sha256_compute(payload, 256, scratch_buf, out_digest);
 }

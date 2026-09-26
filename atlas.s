@@ -1,6 +1,7 @@
 /*
- * ALPHA: Irreducible Bootstrap Seed
- * Canonical Root Artifact: alpha.bin
+ * ATLAS: Irreducible Bootstrap Seed
+ * Canonical Root Artifact: atlas.bin
+ * Formerly designated Alpha (alpha.bin) in early lineage bootstrap drafting.
  * Machine Contract: CONTRACT-QEMU-VIRT-AARCH64-M1
  * Cryptographic Integrity Scheme: Standard SHA-256
  * Pinned Digest: e1d89bb1e0854ebaccd2be5c756c8a2ff8c5ecc8c0f90b4abd461fb7bf98374c
@@ -109,13 +110,13 @@ print_string:
 
 .balign 8
 msg_awaken:
-    .asciz "ALPHA: AWAKEN\n"
+    .asciz "ATLAS: AWAKEN\n"
 msg_verify:
-    .asciz "ALPHA: VERIFY\n"
+    .asciz "ATLAS: VERIFY\n"
 msg_handoff:
-    .asciz "ALPHA: HANDOFF\n"
+    .asciz "ATLAS: HANDOFF\n"
 msg_refuse:
-    .asciz "ALPHA: REFUSE\n"
+    .asciz "ATLAS: REFUSE\n"
 
 .balign 8
 pinned_sha256_digest:

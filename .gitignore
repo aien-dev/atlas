@@ -1,0 +1,9 @@
+*.o
+*.elf
+__pycache__/
+tmp_*
+corrupt_test.bin
+physics-0-corrupt.bin
+test_sha_runner
+test_sha_runner.c
+test_sha.s
