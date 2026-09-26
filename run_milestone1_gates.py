@@ -41,6 +41,8 @@ def run_milestone1_gates():
     
     # 0. Run NIST SHA-256 KAT Runner
     print("\n[KAT] Executing NIST FIPS 180-4 SHA-256 Known-Answer Tests...")
+    # Build the host KAT runner from source every run (the binary is not tracked).
+    subprocess.run(["gcc", "-O2", "-o", "test_sha256_kat", "test_sha256_kat.c", "sha256_clean.c"], check=True)
     kat_proc = subprocess.run(["./test_sha256_kat"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     for line in kat_proc.stdout.strip().splitlines():
         print(f"  {line}")
