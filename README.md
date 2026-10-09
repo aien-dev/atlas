@@ -49,6 +49,8 @@ Every prior architectural responsibility of **ALPHA** transfers to **ATLAS** unc
 
 ## Qualification Architecture (Dual Verification Seams)
 
+> Historical note (2026-10-09): the `.py` files named in this section are retained as frozen historical evidence only, not part of active AIEN execution. See [`HISTORICAL-PYTHON.md`](HISTORICAL-PYTHON.md). The current gate runner is `run_m1_gates.sh`.
+
 ### Seam 1: Independent Artifact-Audit Seam (`seam1_artifact_audit.py`)
 Validates artifacts statically without requiring execution:
 1. `ATLAS_ARTIFACT_IDENTITY_PASS`: `atlas.bin` matches `atlas.sha256`.
