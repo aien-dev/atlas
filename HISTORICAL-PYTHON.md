@@ -26,4 +26,4 @@ Hashes are of the files at repository commit `7e6b836` and unchanged through `2b
 
 ## Active replacement (separate, already present)
 
-`run_m1_gates.sh` (symlinked as `run_milestone1_gates.sh`) and `tools/m1tool.c` (pure C11 and POSIX shell, commit `0ec17d4`) are the current Python-free gate runner. They are not requalified by this marking and no new receipt is issued here (see decision item 6).
+`run_m1_gates.sh` (symlinked as `run_milestone1_gates.sh`) and `tools/m1tool.c` (pure C11 and POSIX shell, commit `0ec17d4`) are the current Python-free gate runner. They are not requalified by this marking and no new receipt is issued here (see decision item 4).
