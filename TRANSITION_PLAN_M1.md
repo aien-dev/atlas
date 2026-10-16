@@ -31,5 +31,5 @@ A complete, pure C (C11) and POSIX shell replacement suite has been designed and
    - Legacy Python scripts remain available as historical reference.
 2. **Phase 2 (Formal Requalification Decision)**:
    - When recorded in `aien-architecture#12`, `run_m1_gates.sh --write-receipt` generates a refreshed receipt reflecting the pure C/shell verification toolchain.
-3. **Phase 3 (Python Retirement & Archival)**:
-   - Legacy Python files are moved to `history/legacy-python/` or deleted, completing total retirement of Python from the sovereign path.
+3. **Phase 3 (Python Retirement & Archival), done 2026-10-15**:
+   - Legacy Python files are deleted from the tree (kept in git history, see `HISTORICAL-PYTHON.md`), completing total retirement of Python. A CI guard keeps Python out.
