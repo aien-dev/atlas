@@ -53,7 +53,7 @@ Every prior architectural responsibility of **ALPHA** transfers to **ATLAS** unc
 
 ## Qualification Architecture (Dual Verification Seams)
 
-> Historical note (2026-10-09): the `.py` files named in this section are retained as frozen historical evidence only, not part of active AIEN execution. See [`HISTORICAL-PYTHON.md`](HISTORICAL-PYTHON.md). The current gate runner is `run_m1_gates.sh`, which builds `tools/m1tool.c` with the host `gcc`, runs the NIST SHA-256 known-answer tests, then both seams (the QEMU seam needs `qemu-system-aarch64`). It leaves the committed `qualification_receipt.json` untouched unless `--write-receipt` is passed.
+> Historical note (2026-10-15): the `.py` files named in this section were the original Milestone 1 scripts; they were removed from the tree under the no-Python rule and remain in git history. See [`HISTORICAL-PYTHON.md`](HISTORICAL-PYTHON.md). The current gate runner is `run_m1_gates.sh`, which builds `tools/m1tool.c` with the host `gcc`, runs the NIST SHA-256 known-answer tests, then both seams (the QEMU seam needs `qemu-system-aarch64`). It leaves the committed `qualification_receipt.json` untouched unless `--write-receipt` is passed.
 
 ### Seam 1: Independent Artifact-Audit Seam (`m1tool audit-verify`; originally `seam1_artifact_audit.py`)
 Validates artifacts statically without requiring execution:

@@ -1,19 +1,15 @@
-# HISTORICAL — NOT PART OF ACTIVE AIEN EXECUTION
+# HISTORICAL: the Milestone 1 Python scripts (removed from the tree 2026-10-15)
 
-The four Python files listed below are retained, byte for byte, as frozen historical evidence for the Milestone 1 (ATLAS) QEMU qualification receipt. They are not part of any active AIEN build, qualification run, CI workflow, or runtime.
+The four Python files listed below were the original Milestone 1 (ATLAS) QEMU qualification scripts. They are no longer in this repository's tree. Their exact bytes stay in git history and can be read with `git show 2b171ed:<path>` (the last commit that holds them); the SHA-256 and git blob of each are in the table, so anyone can check that what they retrieve is the original.
 
-## Decision
+## Decisions
 
-Operator decision, Drake, 2026-10-09 (recorded against aien-dev/aien-architecture#12, aien-dev/atlas#2): Option 1 approved. Preserve legacy Python qualification scripts as frozen historical evidence. This does not relax the prohibition on Python in AIEN's active runtime or trusted tooling.
+1. Operator decision, Drake, 2026-10-09 (aien-dev/aien-architecture#12, aien-dev/atlas#2): keep the scripts byte for byte as frozen historical evidence, outside active AIEN execution.
+2. Operator rule, Drake, 2026-10-15: no Python anywhere in AIEN. This supersedes decision 1 for the working tree: the four files are deleted from the tree, and a CI guard (`scripts/check-no-python.sh`, run by `.github/workflows/no-python.yml`) fails the build if any Python file is tracked again. The evidence itself is unchanged: `qualification_receipt.json`, `atlas.bin` and the audit artifacts are untouched, and the script bytes remain retrievable from history as described above.
+3. Nothing depended on these files: no production entry point, build, CI workflow or runtime ran them (checked again 2026-10-15 with `git grep`). The Python-free gate runner below already replaced them.
+4. Historical evidence is not altered to conform to today's standards. Requalifying Milestone 1 with the current tooling remains a separate task.
 
-1. The retained files are marked HISTORICAL — NOT PART OF ACTIVE AIEN EXECUTION (this file).
-2. Original source bytes, qualification receipts, hashes, and historical test outcomes are preserved. The `.py` files, `qualification_receipt.json`, `atlas.bin` and the audit artifacts are unchanged by this marking.
-3. No production entry point, active build, CI qualification workflow, or current runtime depends on these files (verified 2026-10-09; see the PR for the evidence).
-4. Historical evidence is not altered to conform to today's standards.
-5. Scoped claim: the enforceable claim is that AIEN's **active trusted execution path** is Python-free. This repository is **not** claimed to be Python-free.
-6. Reactivating, replacing, or requalifying any of these files needs a separate task and new evidence. No Rust rewrite and no deletion is made or implied here.
-
-`TRANSITION_PLAN_M1.md` (Phase 3: move or delete the legacy Python) is superseded by this decision. The files stay where they are, unmodified.
+`TRANSITION_PLAN_M1.md` Phase 3 (retire the legacy Python) is complete as of 2026-10-15.
 
 ## File table
 
@@ -26,7 +22,7 @@ Operator decision, Drake, 2026-10-09 (recorded against aien-dev/aien-architectur
 
 Receipt: `qualification_receipt.json`, canonical artifact `atlas.bin` (SHA-256 `f7802501b410a0c19eff7b8fca8865c9ba9c96bfa4f8065ca8f508b67748b9a5`, 1480 bytes). The receipt does not embed digests of these scripts; the binding is by gate names and results.
 
-Hashes are of the files at repository commit `7e6b836` (default branch `master`). Anything that needs to confirm them can run `sha256sum` and `git rev-parse HEAD:<path>`.
+Hashes are of the files at repository commit `7e6b836` and unchanged through `2b171ed`, the last commit that holds them (default branch `master`). To confirm: `git show 2b171ed:<path> | sha256sum` and `git rev-parse 2b171ed:<path>`.
 
 ## Active replacement (separate, already present)
 
