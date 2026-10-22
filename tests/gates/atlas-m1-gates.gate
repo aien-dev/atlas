@@ -1,0 +1,35 @@
+gate: ATLAS-M1-GATES
+manifest_version: 2
+owner: atlas
+requires:
+  - qemu
+inputs:
+  - run_m1_gates.sh
+  - run_milestone1_gates.sh
+  - scripts/
+  - tools/
+  - machine_contract.json
+  - qualification_receipt.json
+  - atlas.s
+  - atlas.bin
+  - atlas.sha256
+  - atlas.manifest
+  - atlas.audit
+  - atlas.decode
+  - atlas.control-flow
+  - atlas.memory-map
+  - physics_0.s
+  - physics-0.bin
+  - sha256_clean.c
+  - sha256_clean.s
+  - test_sha256_kat.c
+  - tests/gates/
+run:
+  exec: tests/gates/run.sh
+  args: ["m1-gates"]
+expects:
+  exit: 0
+  verdict: PASS
+timeout: 60m
+exactness: EXACT
+cache_scope: machine
