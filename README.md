@@ -2,7 +2,7 @@
 
 Atlas is the first software in the AIEN chain: one small AArch64 binary (`atlas.bin`, 1,480 bytes) that checks the next boot stage against a pinned SHA-256 digest, hands control to it, and refuses and halts if the check fails. Milestone 1 is qualified in QEMU only. Native DGX Spark qualification is still pending.
 
-Belongs to AIEN; start at [Aienix](https://github.com/aien-dev/aienix), the core tree of AIEN, for the whole project. Atlas is milestone M1 (`ATLAS_BOOT`) in the AIEN roadmap ([`doctrine/ROADMAP.md`](https://github.com/aien-dev/aien-architecture/blob/main/doctrine/ROADMAP.md) in aien-architecture). It is not one of the components Aienix lists today: the boot artifacts and the GB10 hardware path continue in [physics](https://github.com/aien-dev/physics). This repository holds only the seed and its evidence.
+Belongs to AIEN; start at [AienOS](https://github.com/aien-dev/aienix), the core tree of AIEN, for the whole project. Atlas is milestone M1 (`ATLAS_BOOT`) in the AIEN roadmap ([`doctrine/ROADMAP.md`](https://github.com/aien-dev/aien-architecture/blob/main/doctrine/ROADMAP.md) in aien-architecture). It is not one of the components AienOS lists today: the boot artifacts and the GB10 hardware path continue in [physics](https://github.com/aien-dev/physics). This repository holds only the seed and its evidence.
 
 **Status (2026-10-18): QEMU qualified, native run pending, quiet.** The seed and its gate runner last changed on 2026-09-26. Since then: a relicense (2026-10-04) and the removal of the old Python scripts with a check that keeps Python out (2026-10-15). Run the gates with `./run_m1_gates.sh`.
 
