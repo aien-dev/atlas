@@ -77,6 +77,18 @@ static int parse_u64(const char *s, uint64_t *v) {
     return 0;
 }
 
+/* objdump's literal operand is hexadecimal and must terminate before metadata. */
+static int parse_literal(const char *s, uint64_t *value) {
+    if (!isxdigit((unsigned char)*s)) return 0;
+    char *end;
+    errno = 0;
+    unsigned long long parsed = strtoull(s, &end, 16);
+    if (errno || end == s || (*end && *end != ' ' && *end != '\t' &&
+                               *end != '<' && *end != '\n')) return 0;
+    *value = parsed;
+    return 1;
+}
+
 static void put_hex(const uint8_t *p, uint64_t n) {
     for (uint64_t i = 0; i < n; i++) printf("%02x", p[i]);
 }
@@ -384,9 +396,9 @@ static int cmd_audit_verify(int argc, char **argv) {
             char *lit_str = strstr(pred_pos, "ldr\tx19,");
             lit_str += strlen("ldr\tx19,");
             while (*lit_str == ' ' || *lit_str == '\t') lit_str++;
-            uint64_t literal_addr = strtoull(lit_str, NULL, 16);
-
-            if (literal_addr + 8 > bin_sz) {
+            uint64_t literal_addr = 0;
+            if (!parse_literal(lit_str, &literal_addr) ||
+                literal_addr > bin_sz || bin_sz - literal_addr < 8) {
                 printf("  FAIL: Literal address 0x%llx is beyond binary size\n", (unsigned long long)literal_addr);
                 audit_ok = 0;
             } else {
@@ -471,8 +483,9 @@ static int cmd_audit_verify(int argc, char **argv) {
             char *lit_str = strchr(p_ldr, ',');
             lit_str++;
             while (*lit_str == ' ' || *lit_str == '\t') lit_str++;
-            uint64_t sp_lit_addr = strtoull(lit_str, NULL, 16);
-            if (sp_lit_addr + 8 <= bin_sz) {
+            uint64_t sp_lit_addr;
+            if (parse_literal(lit_str, &sp_lit_addr) &&
+                sp_lit_addr <= bin_sz && bin_sz - sp_lit_addr >= 8) {
                 uint64_t loaded_sp = 0;
                 for (int i = 0; i < 8; i++) loaded_sp |= (uint64_t)bin_buf[sp_lit_addr + i] << (8 * i);
                 printf("  Static SP Loader Value:       0x%08llx\n", (unsigned long long)loaded_sp);
@@ -526,10 +539,24 @@ static int cmd_gen_audit(int argc, char **argv) {
     const char *p_out_audit = argv[3];
     const char *p_out_decode = argv[4];
 
-    /* 1. Run aarch64-linux-gnu-objdump -d */
-    char cmd[512];
-    snprintf(cmd, sizeof(cmd), "aarch64-linux-gnu-objdump -d %s > %s", p_elf, p_out_decode);
-    if (system(cmd) != 0) return fail("objdump failed on %s", p_elf);
+    /* Argument vectors keep untrusted artifact paths inert. */
+    int out = open(p_out_decode, O_WRONLY | O_CREAT | O_TRUNC | O_NOFOLLOW, 0600);
+    if (out < 0) return fail("cannot open decode output %s", p_out_decode);
+    pid_t pid = fork();
+    if (pid < 0) { close(out); return fail("cannot fork objdump"); }
+    if (pid == 0) {
+        if (dup2(out, STDOUT_FILENO) < 0) _exit(127);
+        close(out);
+        execlp("aarch64-linux-gnu-objdump", "aarch64-linux-gnu-objdump",
+               "-d", "--", p_elf, (char *)NULL);
+        _exit(127);
+    }
+    close(out);
+    int status;
+    while (waitpid(pid, &status, 0) < 0) {
+        if (errno != EINTR) return fail("cannot wait for objdump");
+    }
+    if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) return fail("objdump failed on %s", p_elf);
 
     uint8_t *bin_buf; uint64_t bin_sz;
     if (read_file(p_bin, &bin_buf, &bin_sz)) return 1;
@@ -933,8 +960,12 @@ static int cmd_qemu_matrix(int argc, char **argv) {
     if (golden_sz != 256) { free(golden_buf); return fail("golden payload size %llu != 256", (unsigned long long)golden_sz); }
 
     printf("\n[Exec-2A] Executing Exhaustive 256-Single-Byte Mutation Sweep (Offsets 0..255)...\n");
-    char tmp_path[64];
-    snprintf(tmp_path, sizeof(tmp_path), "/tmp/atlas_sweep_%d.bin", getpid());
+    char tmp_dir[] = "/tmp/atlas_sweep_XXXXXX";
+    if (!mkdtemp(tmp_dir)) { free(golden_buf); return fail("cannot create private sweep directory"); }
+    char tmp_path[sizeof(tmp_dir) + sizeof("/mutant.bin")];
+    snprintf(tmp_path, sizeof(tmp_path), "%s/mutant.bin", tmp_dir);
+    int tmp_fd = open(tmp_path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0600);
+    if (tmp_fd < 0) { rmdir(tmp_dir); free(golden_buf); return fail("cannot create sweep file"); }
 
     struct timespec t0, t1;
     clock_gettime(CLOCK_MONOTONIC, &t0);
@@ -946,10 +977,11 @@ static int cmd_qemu_matrix(int argc, char **argv) {
         memcpy(mut_buf, golden_buf, 256);
         mut_buf[offset] ^= 0x01;
 
-        FILE *f = fopen(tmp_path, "wb");
-        if (!f) { unlink(tmp_path); free(golden_buf); return fail("cannot open temp file"); }
-        fwrite(mut_buf, 1, 256, f);
-        fclose(f);
+        if (lseek(tmp_fd, 0, SEEK_SET) < 0 ||
+            write(tmp_fd, mut_buf, sizeof(mut_buf)) != (ssize_t)sizeof(mut_buf)) {
+            close(tmp_fd); unlink(tmp_path); rmdir(tmp_dir); free(golden_buf);
+            return fail("cannot write sweep file");
+        }
 
         char out[1024];
         int res = run_qemu_proc(atlas_bin, tmp_path, 1500, out, sizeof(out));
@@ -963,13 +995,15 @@ static int cmd_qemu_matrix(int argc, char **argv) {
             printf("  Tested %3d/256 byte offsets: all refused into quiescence cleanly.\n", offset + 1);
         }
     }
-    unlink(tmp_path);
     clock_gettime(CLOCK_MONOTONIC, &t1);
     double elapsed_sweep = (t1.tv_sec - t0.tv_sec) + (t1.tv_nsec - t0.tv_nsec) / 1e9;
     printf("  Exhaustive 256-Offset Sweep completed in %.2fs (Result: %s)\n",
            elapsed_sweep, sweep_ok ? "PASS" : "FAIL");
 
-    if (!sweep_ok) { free(golden_buf); return 1; }
+    if (!sweep_ok) {
+        close(tmp_fd); unlink(tmp_path); rmdir(tmp_dir); free(golden_buf);
+        return 1;
+    }
 
     /* 2B. 12 Adversarial Mutations */
     printf("\n[Exec-2B] Executing 12 Adversarial Structured Mutation Scenarios...\n");
@@ -1010,10 +1044,11 @@ static int cmd_qemu_matrix(int argc, char **argv) {
             case 11: memset(mut_buf, 0xFF, 256); break;
         }
 
-        FILE *f = fopen(tmp_path, "wb");
-        if (!f) { unlink(tmp_path); free(golden_buf); return fail("cannot open temp file"); }
-        fwrite(mut_buf, 1, 256, f);
-        fclose(f);
+        if (lseek(tmp_fd, 0, SEEK_SET) < 0 ||
+            write(tmp_fd, mut_buf, sizeof(mut_buf)) != (ssize_t)sizeof(mut_buf)) {
+            close(tmp_fd); unlink(tmp_path); rmdir(tmp_dir); free(golden_buf);
+            return fail("cannot write sweep file");
+        }
 
         char out[1024];
         int res = run_qemu_proc(atlas_bin, tmp_path, 1500, out, sizeof(out));
@@ -1026,12 +1061,12 @@ static int cmd_qemu_matrix(int argc, char **argv) {
             adv_ok = 0;
         }
     }
-    unlink(tmp_path);
 
     if (sweep_ok && adv_ok) {
         printf("  -> ATLAS_CORRUPTION_REFUSAL_QEMU_PASS: OK (268/268 total mutations refused: 256 sweep + 12 adversarial)\n");
     } else {
         printf("  -> ATLAS_CORRUPTION_REFUSAL_QEMU_PASS: FAILED\n");
+        close(tmp_fd); unlink(tmp_path); rmdir(tmp_dir);
         free(golden_buf);
         return 1;
     }
@@ -1040,13 +1075,17 @@ static int cmd_qemu_matrix(int argc, char **argv) {
     printf("\n[Exec-3] Verifying Fail-Closed Quiescence...\n");
     memcpy(mut_buf, golden_buf, 256);
     mut_buf[10] ^= 0x01;
-    FILE *f = fopen(tmp_path, "wb");
-    fwrite(mut_buf, 1, 256, f);
-    fclose(f);
+    if (lseek(tmp_fd, 0, SEEK_SET) < 0 ||
+        write(tmp_fd, mut_buf, sizeof(mut_buf)) != (ssize_t)sizeof(mut_buf)) {
+        close(tmp_fd); unlink(tmp_path); rmdir(tmp_dir); free(golden_buf);
+        return fail("cannot write quiescence mutant");
+    }
 
     char q_out[2048];
     run_qemu_proc(atlas_bin, tmp_path, 1500, q_out, sizeof(q_out));
+    close(tmp_fd);
     unlink(tmp_path);
+    rmdir(tmp_dir);
     free(golden_buf);
 
     /* Verify terminal line is "ATLAS: REFUSE" and exactly 3 lines emitted */

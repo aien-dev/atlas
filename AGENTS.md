@@ -35,7 +35,7 @@ sh scripts/check-no-python.sh
 ```
 
 - `run_milestone1_gates.sh` is the same runner under its old name.
-- The runner uses `set -eu`, so a failing build, Seam 1 or Seam 2 step stops it with a nonzero exit, and the summary block at the end is printed only when those steps succeeded. The known-answer test output is piped through `sed`, which hides its exit code: check that every KAT line reads `[PASS]` as well as the final exit code.
+- The KAT exit status is required: a failed known-answer test stops the runner before the artifact audit or QEMU seams, even if it printed expected-looking output.
 - `./run_m1_gates.sh --write-receipt` overwrites `qualification_receipt.json`. Do not pass it unless the change is an approved requalification.
 - QEMU qualification is not native qualification. `ATLAS_BOOT_NATIVE_PASS` needs a physical NVIDIA DGX Spark and has no runner in this repository.
 - `tools/m1tool` also exposes `sha256`, `hexfield`, `bytes`, `audit-verify`, `gen-audit`, `mutate-sweep`, `mutate-adv`, `qemu-run` and `qemu-matrix`; each prints its usage when called with wrong arguments.

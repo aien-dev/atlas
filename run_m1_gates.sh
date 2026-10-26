@@ -50,7 +50,14 @@ M1TOOL="$ATLAS_DIR/tools/m1tool"
 # 1. Run NIST SHA-256 KAT Runner
 echo ""
 echo "[KAT] Executing NIST FIPS 180-4 SHA-256 Known-Answer Tests..."
-"$ATLAS_DIR/test_sha256_kat" | sed 's/^/  /'
+if KAT_OUTPUT=$("$ATLAS_DIR/test_sha256_kat"); then
+  printf '%s\n' "$KAT_OUTPUT" | sed 's/^/  /'
+else
+  KAT_STATUS=$?
+  printf '%s\n' "$KAT_OUTPUT" | sed 's/^/  /'
+  echo "  [FAIL] SHA-256 known-answer test exited $KAT_STATUS" >&2
+  exit "$KAT_STATUS"
+fi
 echo ""
 
 # 2. Run Seam 1 (Artifact Audit Seam)
