@@ -77,3 +77,15 @@ Validates execution in bare-metal QEMU AArch64:
 4. `ATLAS_FAIL_CLOSED_QEMU_PASS`: Halts cleanly in `wfe; b .` with zero instruction overrun.
 
 *Note: QEMU qualification pass (`ATLAS_BOOT_QEMU_PASS`) is strictly decoupled from native hardware qualification (`ATLAS_BOOT_NATIVE_PASS`), which remains pending for physical DGX Spark execution.*
+
+## Human-Directed Agentic Engineering
+
+Development follows Human-Directed Agentic Engineering (HDAE): humans define goals,
+architecture, constraints, acceptance criteria, and stopping points; agents implement,
+execute checks, diagnose failures, and revise within those boundaries. Human review
+retains responsibility for claims, acceptance, and release decisions. This describes
+current development, not a retrospective claim about the historical qualification.
+
+For the documented method and a systems-software case study, see Gregory M. Kurtzer,
+*Ginux: Building an Independent Kernel That Runs Linux Userspace through Human-Directed
+Agentic Engineering* (2026), https://doi.org/10.5281/zenodo.23682548.
